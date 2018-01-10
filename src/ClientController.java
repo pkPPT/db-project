@@ -1,10 +1,8 @@
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 
 
@@ -37,9 +35,17 @@ public class ClientController {
     @FXML
     private StackPane factoryView;
     @FXML
-    private ChoiceBox<String> factoryToolBox;
+    private TableView<Order> factoryOrdersTable;
     @FXML
-    private Button factoryOKButton;
+    private TableColumn<Order, String> factoryOrdersTableBrand;
+    @FXML
+    private TableColumn<Order, String> factoryOrdersTableModel;
+    @FXML
+    private TableColumn<Order, String> factoryOrdersTableAmount;
+    @FXML
+    private TableColumn<Order, String> factoryOrdersTableAccomplished;
+    @FXML
+    private Button setOrderStateButton;
 
     //DEALER
     @FXML
@@ -63,6 +69,34 @@ public class ClientController {
     @FXML
     private Label transactionInfoLabel;
 
+    //FACTORY MANAGEMENT
+    @FXML
+    private StackPane factoryManagementView;
+    @FXML
+    private TableView<Factory> factoriesTable;
+    @FXML
+    private TableColumn<Factory, String> factoriesTableID;
+    @FXML
+    private TableColumn<Factory, String> factoriesTableCountry;
+    @FXML
+    private TableColumn<Factory, String> factoriesTableCity;
+    @FXML
+    private TableColumn<Factory, String> factoriesTableAddress;
+    @FXML
+    private  TableColumn<Factory, String> factoriesTableNumber;
+    @FXML
+    private TextField newFactoryCountryField;
+    @FXML
+    private TextField newFactoryCityField;
+    @FXML
+    private TextField newFactoryAddressField;
+    @FXML
+    private TextField newFactoryNumberField;
+    @FXML
+    private Button addFactoryButton;
+    @FXML
+    private Button deleteFactoryButton;
+
     public ClientController(Client client) {
         this.client = client;
     }
@@ -75,9 +109,7 @@ public class ClientController {
         accountTypeBox.getItems().add("Car Store");
         accountTypeBox.getItems().add("Company Worker");
 
-        companyToolBox.getItems().add("");
-
-        factoryToolBox.getItems().add("");
+        companyToolBox.getItems().add("Factories Management");
 
         dealerToolBox.getItems().add("");
 
@@ -116,6 +148,7 @@ public class ClientController {
             case("Factory"):
                 loginView.setVisible(false);
                 loginView.setDisable(true);
+                initFactoryView();
                 factoryView.setVisible(true);
                 factoryView.setDisable(false);
                 break;
@@ -163,13 +196,48 @@ public class ClientController {
     @FXML
     private void companyOKButtonOnClick(ActionEvent e) {
         String tool = companyToolBox.getValue();
+        if(tool != null) {
+            companyView.setDisable(true);
+            companyView.setVisible(false);
+            switch (tool) {
+                case ("Factories Management"):
+                    initFactoryManagementView();
+                    factoryManagementView.setDisable(false);
+                    factoryManagementView.setVisible(true);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
 
     //FACTORY
+    public void initFactoryView() {
+        factoryOrdersTableBrand.setCellValueFactory(new PropertyValueFactory<>("brand"));
+        factoryOrdersTableModel.setCellValueFactory(new PropertyValueFactory<>("model"));
+        factoryOrdersTableAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        factoryOrdersTableAccomplished.setCellValueFactory(new PropertyValueFactory<>("accomplished"));
+        factoryOrdersTable.setItems(Order.getOrders());
+    }
+
     @FXML
-    private void factoryOKButtonOnClick(ActionEvent e) {
-        String tool = factoryToolBox.getValue();
+    private void setOrderStateButtonOnClick(ActionEvent e) {
+        Order orderToSet = factoryOrdersTable.getSelectionModel().getSelectedItem();
+        if(orderToSet != null) {
+            if(Order.setAsAccomplished(orderToSet)) {
+                ObservableList<Order> newList = factoryOrdersTable.getItems();
+                newList.remove(orderToSet);
+                factoryOrdersTable.setItems(newList);
+                //TODO - print message
+            }
+            else {
+                //TODO - print error
+            }
+        }
+        else {
+            //TODO - print error
+        }
     }
 
     //DEALER
@@ -194,4 +262,51 @@ public class ClientController {
 
     //COMPANY WORKER
 
+    //FACTORY MANAGEMENT
+    private void initFactoryManagementView() {
+        factoriesTableID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        factoriesTableCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+        factoriesTableCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        factoriesTableAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        factoriesTableNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
+        factoriesTable.setItems(Factory.getFactories());
+        //TODO - sciagniecie listy fabryk z bazy
+    }
+
+    @FXML
+    private void addFactoryButtonOnClick(ActionEvent e) {
+        String country = newFactoryCountryField.getText();
+        String city = newFactoryCityField.getText();
+        String address = newFactoryAddressField.getText();
+        String number = newFactoryNumberField.getText();
+        if(country != null && city != null && address != null && number != null) {
+            if (Factory.addFactory(country, city, address, number)) {
+                //TODO - print message
+            } else {
+                //TODO - print error
+            }
+        }
+        else {
+            //TODO - print error
+        }
+    }
+
+    @FXML
+    private void deleteFactoryButtonOnClick(ActionEvent e) {
+        Factory factoryToDelete = factoriesTable.getSelectionModel().getSelectedItem();
+        if(factoryToDelete != null) {
+            if(Factory.deleteFactory(factoryToDelete)) {
+                ObservableList<Factory> newList = factoriesTable.getItems();
+                newList.remove(factoryToDelete);
+                factoriesTable.setItems(newList);
+                //TODO - print message
+            }
+            else {
+                //TODO - print error
+            }
+        }
+        else {
+            //TODO - print error
+        }
+    }
 }
