@@ -1,6 +1,8 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
+
 public class Factory {
     public String id;
     public String country;
@@ -51,6 +53,12 @@ public class Factory {
         factories.add(new Factory("id", "country", "city", "address", "number", "workers"));
         factories.add(new Factory("id", "country", "city", "address", "number", "workers"));
         return factories;
+    }
+
+    public static ArrayList<Factory> getFactoryList() {
+        ArrayList<Factory> list = new ArrayList<>();
+        //TODO - get table from database
+        return list;
     }
 
     public static boolean addFactory(String country, String city, String address, String number) {

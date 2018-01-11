@@ -1,3 +1,4 @@
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -5,9 +6,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 
+import java.util.ArrayList;
+
 
 public class ClientController {
     Client client;
+    ArrayList<BrandModel> brandModelList = new ArrayList<>();
+    ArrayList<Factory> factoryList = new ArrayList<>();
 
     //LOGIN
     @FXML
@@ -69,6 +74,11 @@ public class ClientController {
     @FXML
     private Label transactionInfoLabel;
 
+    //COMPANY WORKER
+    @FXML
+    private StackPane companyWorkerView;
+
+
     //FACTORY MANAGEMENT
     @FXML
     private StackPane factoryManagementView;
@@ -97,6 +107,17 @@ public class ClientController {
     @FXML
     private Button deleteFactoryButton;
 
+    //FACTORY-MODEL MANAGEMENT
+    @FXML
+    private StackPane factoryModelManagementView;
+    @FXML
+    private ChoiceBox<String> factoryModelBoxModel;
+    @FXML
+    private ChoiceBox<String> factoryModelBoxFactory;
+    @FXML
+    private Button signModelToFactoryButton;
+    //TODO - table with factories and signed models
+
     public ClientController(Client client) {
         this.client = client;
     }
@@ -110,6 +131,7 @@ public class ClientController {
         accountTypeBox.getItems().add("Company Worker");
 
         companyToolBox.getItems().add("Factories Management");
+        companyToolBox.getItems().add("Factory-Model Management");
 
         dealerToolBox.getItems().add("");
 
@@ -168,6 +190,8 @@ public class ClientController {
             case("Company Worker"):
                 loginView.setVisible(false);
                 loginView.setDisable(true);
+                companyWorkerView.setVisible(true);
+                companyWorkerView.setDisable(false);
                 break;
             default:
                 break;
@@ -204,6 +228,11 @@ public class ClientController {
                     initFactoryManagementView();
                     factoryManagementView.setDisable(false);
                     factoryManagementView.setVisible(true);
+                    break;
+                case("Factory-Model Management"):
+                    initFactoryModelManagementView();
+                    factoryModelManagementView.setVisible(true);
+                    factoryModelManagementView.setDisable(false);
                     break;
                 default:
                     break;
@@ -308,5 +337,29 @@ public class ClientController {
         else {
             //TODO - print error
         }
+    }
+
+    //FACTORY-MODEL MANAGEMENT
+    public void initFactoryModelManagementView() {
+        brandModelList.clear();
+        factoryList.clear();
+        brandModelList = BrandModel.getBrandModels();
+        factoryList = Factory.getFactoryList();
+
+        ObservableList<String> brand = FXCollections.observableArrayList();
+        ObservableList<String> factory = FXCollections.observableArrayList();
+        for(BrandModel b : brandModelList) {
+            brand.add(b.getBrand() + "/" + b.getModel());
+        }
+        for(Factory f : factoryList) {
+            factory.add(f.getCountry() + "/" + f.getCity() + "/" + f.getAddress());
+        }
+
+        factoryModelBoxModel.setItems(brand);
+        factoryModelBoxFactory.setItems(factory);
+    }
+    @FXML
+    private void signModelToFactoryButtonOnClick(ActionEvent e) {
+        //TODO
     }
 }

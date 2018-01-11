@@ -2,12 +2,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Order {
+    public String id;
     public String brand;
     public String model;
     public String amount;
     public String accomplished;
 
-    public Order(String brand, String model, String amount, String accomplished) {
+    public Order(String id, String brand, String model, String amount, String accomplished) {
+        this.id = id;
         this.brand = brand;
         this.model = model;
         this.amount = amount;
@@ -37,11 +39,11 @@ public class Order {
 
     public static ObservableList<Order> getOrders() {
         ObservableList<Order> list = FXCollections.observableArrayList();
-        list.add(new Order("brand", "model", "amount", "no"));
-        list.add(new Order("brand", "model", "amount", "no"));
-        list.add(new Order("brand1", "model1", "21312", "no"));
-        list.add(new Order("brand2", "model2", "100", "no"));
-        list.add(new Order("brand3", "model3", "2000", "no"));
+        list.add(new Order("1", "brand", "model", "amount", "no"));
+        list.add(new Order("2", "brand", "model", "amount", "no"));
+        list.add(new Order("3", "brand1", "model1", "21312", "no"));
+        list.add(new Order("4", "brand2", "model2", "100", "no"));
+        list.add(new Order("5", "brand3", "model3", "2000", "no"));
         return list;
     }
 }
