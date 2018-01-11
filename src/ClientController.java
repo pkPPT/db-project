@@ -118,6 +118,61 @@ public class ClientController {
     private Button signModelToFactoryButton;
     //TODO - table with factories and signed models
 
+    //DEALER MANAGEMENT
+    @FXML
+    private StackPane dealerManagementView;
+    @FXML
+    private Button removeDealerButton;
+    @FXML
+    private Button addDealerButton;
+    @FXML
+    private TextField addDealerCountryField;
+    @FXML
+    private TextField addDealerCityField;
+    @FXML
+    private TextField addDealerAddressField;
+    @FXML
+    private TextField addDealerNumberField;
+    //TODO - table with dealers
+
+    //BRAND-MODEL MANAGEMENT
+    @FXML
+    private StackPane brandModelManagementView;
+    @FXML
+    private TextField addBrandModelBrandField;
+    @FXML
+    private TextField addBrandModelModelField;
+    @FXML
+    private Button addBrandModelButton;
+    @FXML
+    private Button removeBrandModelButton;
+    //TODO - table with cars
+
+    //CAR STORE MANAGEMENT
+    @FXML
+    private StackPane carStoreManagementView;
+    @FXML
+    private TextField addCarStoreCountryField;
+    @FXML
+    private TextField addCarStoreCityField;
+    @FXML
+    private TextField addCarStoreAddressField;
+    @FXML
+    private Button addCarStoreButton;
+    @FXML
+    private Button removeCarStoreButton;
+    //TODO - table with car stores
+
+    //DEALER ORDERS
+    @FXML
+    private StackPane dealerOrdersView;
+    @FXML
+    private TextField dealerOrderAmountField;
+    @FXML
+    private ChoiceBox<String> dealerOrderModelBox;
+    @FXML
+    private Button addOrderButton;
+
     public ClientController(Client client) {
         this.client = client;
     }
@@ -132,8 +187,11 @@ public class ClientController {
 
         companyToolBox.getItems().add("Factories Management");
         companyToolBox.getItems().add("Factory-Model Management");
+        companyToolBox.getItems().add("Dealer Management");
+        companyToolBox.getItems().add("Brand-Model Management");
 
-        dealerToolBox.getItems().add("");
+        dealerToolBox.getItems().add("Car Store Management");
+        dealerToolBox.getItems().add("Orders");
 
         transactionTypeBox.getItems().add("Sale");
         transactionTypeBox.getItems().add("Leasing");
@@ -234,6 +292,14 @@ public class ClientController {
                     factoryModelManagementView.setVisible(true);
                     factoryModelManagementView.setDisable(false);
                     break;
+                case("Dealer Management"):
+                    dealerManagementView.setVisible(true);
+                    dealerManagementView.setDisable(false);
+                    break;
+                case("Brand-Model Management"):
+                    brandModelManagementView.setVisible(true);
+                    brandModelManagementView.setDisable(false);
+                    break;
                 default:
                     break;
             }
@@ -273,6 +339,22 @@ public class ClientController {
     @FXML
     private void dealerOKButtonOnClick(ActionEvent e) {
         String tool = dealerToolBox.getValue();
+        if(tool != null) {
+            dealerView.setDisable(true);
+            dealerView.setVisible(false);
+            switch(tool) {
+                case("Car Store Management"):
+                    carStoreManagementView.setVisible(true);
+                    carStoreManagementView.setDisable(false);
+                    break;
+                case("Orders"):
+                    dealerOrdersView.setVisible(true);
+                    dealerOrdersView.setDisable(false);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     //CAR STORE
@@ -361,5 +443,96 @@ public class ClientController {
     @FXML
     private void signModelToFactoryButtonOnClick(ActionEvent e) {
         //TODO
+    }
+
+    //DEALER MANAGEMENT
+    @FXML
+    private void removeDealerButtonOnClick(ActionEvent e) {
+
+    }
+
+    @FXML
+    private void addDealerButtonOnClick(ActionEvent e) {
+        String country = addDealerCountryField.getText();
+        String city = addDealerCityField.getText();
+        String address = addDealerAddressField.getText();
+        String number = addDealerNumberField.getText();
+        if(country != null && city != null && address != null && number != null) {
+            if(Dealer.addDealer(country, city, address, number)) {
+                //message
+            }
+            else {
+                //error
+            }
+        }
+        else {
+            //error
+        }
+    }
+
+    //BRAND-MODEL MANAGEMENT
+    @FXML
+    private void removeBrandModelButtonOnClick(ActionEvent e) {
+
+    }
+
+    @FXML
+    private void addBrandModelButtonOnClick(ActionEvent e) {
+        String brand = addBrandModelBrandField.getText();
+        String model = addBrandModelModelField.getText();
+        if(brand != null && model != null) {
+            if(BrandModel.addBrandModel(brand, model)) {
+                //message
+            }
+            else {
+                //error
+            }
+        }
+        else {
+            //error
+        }
+    }
+
+    //CAR STORE MANAGEMENT
+    @FXML
+    private void addCarStoreButtonOnClick(ActionEvent e) {
+        String country = addCarStoreCountryField.getText();
+        String city = addCarStoreCityField.getText();
+        String address = addCarStoreAddressField.getText();
+        if(country != null && city != null && address != null) {
+            if(CarStore.addCarStore(country, city, address)) {
+                //message
+            }
+            else {
+                //error
+            }
+        }
+        else {
+            //error
+        }
+    }
+
+    @FXML
+    private void removeCarStoreButtonOnClick(ActionEvent e) {
+
+    }
+
+    //DEALER ORDERS
+    @FXML
+    private void addOrderButtonOnClick(ActionEvent e) {
+        String brandModel = dealerOrderModelBox.getValue();
+        if(brandModel != null) {
+            String[] model = brandModel.split("/");
+            String amount = dealerOrderAmountField.getText();
+            if (model[0] != null && model[1] != null && amount != null) {
+                if (Order.addOrder(model[0], model[1], amount)) {
+                    //msg
+                } else {
+                    //error
+                }
+            } else {
+                //error
+            }
+        }
     }
 }

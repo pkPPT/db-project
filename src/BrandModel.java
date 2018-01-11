@@ -34,4 +34,8 @@ public class BrandModel {
         //TODO - get table from database
         return list;
     }
+
+    public static boolean addBrandModel(String brand, String model) {
+        return true;
+    }
 }
