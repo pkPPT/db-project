@@ -1,3 +1,6 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class Dealer {
     String id;
     String country;
@@ -36,5 +39,11 @@ public class Dealer {
     public static boolean addDealer(String country, String city, String address, String number) {
         //TODO
         return true;
+    }
+
+    public static ObservableList<Dealer> getDealers() {
+        ObservableList<Dealer> list = FXCollections.observableArrayList();
+
+        return list;
     }
 }

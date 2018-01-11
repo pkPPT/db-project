@@ -20,6 +20,10 @@ public class Factory {
         this.workers = workers;
     }
 
+    public String getProperties() {
+        return id + "/" + country + "/" + city + "/" + address;
+    }
+
     public String getId() {
         return id;
     }

@@ -13,6 +13,8 @@ public class ClientController {
     Client client;
     ArrayList<BrandModel> brandModelList = new ArrayList<>();
     ArrayList<Factory> factoryList = new ArrayList<>();
+    ObservableList<FactoryModel> factoryModelList = FXCollections.observableArrayList();
+    ObservableList<Dealer> dealersList = FXCollections.observableArrayList();
 
     //LOGIN
     @FXML
@@ -116,7 +118,12 @@ public class ClientController {
     private ChoiceBox<String> factoryModelBoxFactory;
     @FXML
     private Button signModelToFactoryButton;
-    //TODO - table with factories and signed models
+    @FXML
+    private TableView<FactoryModel> factoryModelTable;
+    @FXML
+    private TableColumn<FactoryModel, String> factoryModelTableModel;
+    @FXML
+    private TableColumn<FactoryModel, String> factoryModelTableFactory;
 
     //DEALER MANAGEMENT
     @FXML
@@ -133,7 +140,18 @@ public class ClientController {
     private TextField addDealerAddressField;
     @FXML
     private TextField addDealerNumberField;
-    //TODO - table with dealers
+    @FXML
+    private TableView<Dealer> dealersTable;
+    @FXML
+    private TableColumn<Dealer, String> dealersTableId;
+    @FXML
+    private TableColumn<Dealer, String> dealersTableCountry;
+    @FXML
+    private TableColumn<Dealer, String> dealersTableCity;
+    @FXML
+    private TableColumn<Dealer, String> dealersTableAddress;
+    @FXML
+    private TableColumn<Dealer, String> dealersTableNumber;
 
     //BRAND-MODEL MANAGEMENT
     @FXML
@@ -293,6 +311,7 @@ public class ClientController {
                     factoryModelManagementView.setDisable(false);
                     break;
                 case("Dealer Management"):
+                    initDealerManagementView();
                     dealerManagementView.setVisible(true);
                     dealerManagementView.setDisable(false);
                     break;
@@ -439,13 +458,53 @@ public class ClientController {
 
         factoryModelBoxModel.setItems(brand);
         factoryModelBoxFactory.setItems(factory);
+
+        factoryModelList.clear();
+        factoryModelTableFactory.setCellValueFactory(new PropertyValueFactory<>("factoryId"));
+        factoryModelTableModel.setCellValueFactory(new PropertyValueFactory<>("modelId"));
+        factoryModelTable.setItems(factoryModelList);
     }
+
     @FXML
     private void signModelToFactoryButtonOnClick(ActionEvent e) {
         //TODO
     }
 
+    @FXML
+    private void showButtonOnClick(ActionEvent e) {
+        showAvailableModels();
+    }
+
+    //show models for chosen factory
+    private void showAvailableModels() {
+        String factory = factoryModelBoxFactory.getValue();
+        Factory choosenFactory = null;
+        if(factory != null) {
+            String[] factoryProperties = factory.split("/");
+            for(Factory f: factoryList) {
+                if(f.getProperties().equals(factory)) {
+                    choosenFactory = f;
+                    break;
+                }
+            }
+        }
+
+        factoryModelList = FactoryModel.getFactoryModelList(choosenFactory);
+    }
+
     //DEALER MANAGEMENT
+    private void initDealerManagementView() {
+        dealersList.clear();
+        dealersList = Dealer.getDealers();
+        dealersTableId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        dealersTableCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+        dealersTableCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        dealersTableAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        dealersTableNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
+        dealersTable.setItems(dealersList);
+
+    }
+
     @FXML
     private void removeDealerButtonOnClick(ActionEvent e) {
 
