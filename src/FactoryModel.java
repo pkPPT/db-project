@@ -145,4 +145,18 @@ public class FactoryModel {
         }
         return true;
     }
+
+    public static boolean deleteFactoryModel(Connection connection, FactoryModel factoryModel) {
+        try {
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM Factory_Model WHERE id_factory = ? AND id_brand_model = ?");
+            stmt.setInt(1, factoryModel.getFactoryId());
+            stmt.setInt(2, factoryModel.getModelId());
+
+            stmt.executeUpdate();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }

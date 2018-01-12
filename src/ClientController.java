@@ -120,6 +120,8 @@ public class ClientController {
     @FXML
     private Button signModelToFactoryButton;
     @FXML
+    private Button removeModelFromFactoryButton;
+    @FXML
     private TableView<FactoryModel> factoryModelTable;
     @FXML
     private TableColumn<FactoryModel, String> factoryModelTableModel;
@@ -500,6 +502,24 @@ public class ClientController {
             if(FactoryModel.addFactoryModel(client.connection, choosenFactory.getId(), choosenModel.getId())) {
                 factoryModelList = FactoryModel.getAll(client.connection);
             }
+        }
+    }
+
+    @FXML
+    private void removeModelFromFactoryButtonOnClick(ActionEvent e) {
+        FactoryModel factoryModelToDelete = factoryModelTable.getSelectionModel().getSelectedItem();
+        if(factoryModelToDelete != null) {
+            if(FactoryModel.deleteFactoryModel(client.connection, factoryModelToDelete)) {
+                factoryModelList.remove(factoryModelToDelete);
+                factoryModelTable.setItems(factoryModelList);
+                //TODO - print message
+            }
+            else {
+                //TODO - print error
+            }
+        }
+        else {
+            //TODO - print error
         }
     }
 

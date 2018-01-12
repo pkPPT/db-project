@@ -317,6 +317,11 @@
                   <Insets right="310.0" top="600.0" />
                </StackPane.margin>
             </Button>
+            <Button fx:id="removeModelFromFactoryButton" layoutX="227.0" layoutY="610.0" mnemonicParsing="false" onAction="#removeModelFromFactoryButtonOnClick" text="Remove Model From Factory" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets top="640.0" />
+               </StackPane.margin>
+            </Button>
          </children>
       </StackPane>
       <StackPane fx:id="companyWorkerView" disable="true" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="200.0" visible="false">
