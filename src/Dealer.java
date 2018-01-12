@@ -6,9 +6,9 @@ public class Dealer {
     String country;
     String city;
     String address;
-    String number;
+    int number;
 
-    public Dealer(String id, String country, String city, String address, String number) {
+    public Dealer(String id, String country, String city, String address, int number) {
         this.id = id;
         this.country = country;
         this.city = city;
@@ -32,7 +32,7 @@ public class Dealer {
         return address;
     }
 
-    public String getNumber() {
+    public int getNumber() {
         return number;
     }
 

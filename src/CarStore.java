@@ -1,18 +1,24 @@
 public class CarStore {
-    String id;
+    int id; //PRIMARY KEY
+    String dealerId;
     String country;
     String city;
     String address;
 
-    public CarStore(String id, String country, String city, String address) {
+    public CarStore(int id, String dealerId, String country, String city, String address) {
         this.id = id;
+        this.dealerId = dealerId;
         this.country = country;
         this.city = city;
         this.address = address;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
+    }
+
+    public String getDealerId() {
+        return dealerId;
     }
 
     public String getCountry() {
@@ -27,7 +33,7 @@ public class CarStore {
         return address;
     }
 
-    public static boolean addCarStore(String country, String city, String address) {
+    public static boolean addCarStore(String dealerId, String country, String city, String address) {
         return true;
     }
 }

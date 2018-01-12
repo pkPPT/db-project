@@ -1,19 +1,22 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 
 public class BrandModel {
-    String id;
+    int id;
     String brand;
     String model;
-    String inProduction;
+    boolean inProduction;
 
-    public BrandModel(String id, String brand, String model, String inProduction) {
+    public BrandModel(int id, String brand, String model, boolean inProduction) {
         this.id = id;
         this.brand = brand;
         this.model = model;
         this.inProduction = inProduction;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -25,12 +28,12 @@ public class BrandModel {
         return model;
     }
 
-    public String getInProduction() {
+    public boolean getInProduction() {
         return inProduction;
     }
 
-    public static ArrayList<BrandModel> getBrandModels() {
-        ArrayList<BrandModel> list = new ArrayList<>();
+    public static ObservableList<BrandModel> getBrandModels() {
+        ObservableList<BrandModel> list = FXCollections.observableArrayList();
         //TODO - get table from database
         return list;
     }

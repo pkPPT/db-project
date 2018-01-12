@@ -6,13 +6,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
 
 public class ClientController {
     Client client;
-    ArrayList<BrandModel> brandModelList = new ArrayList<>();
-    ArrayList<Factory> factoryList = new ArrayList<>();
+    ObservableList<BrandModel> brandModelList = FXCollections.observableArrayList();
+    ObservableList<Factory> factoryList = FXCollections.observableArrayList();
     ObservableList<FactoryModel> factoryModelList = FXCollections.observableArrayList();
     ObservableList<Dealer> dealersList = FXCollections.observableArrayList();
 
@@ -87,7 +88,7 @@ public class ClientController {
     @FXML
     private TableView<Factory> factoriesTable;
     @FXML
-    private TableColumn<Factory, String> factoriesTableID;
+    private TableColumn<Factory, Integer> factoriesTableID;
     @FXML
     private TableColumn<Factory, String> factoriesTableCountry;
     @FXML
@@ -95,7 +96,7 @@ public class ClientController {
     @FXML
     private TableColumn<Factory, String> factoriesTableAddress;
     @FXML
-    private  TableColumn<Factory, String> factoriesTableNumber;
+    private  TableColumn<Factory, Integer> factoriesTableNumber;
     @FXML
     private TextField newFactoryCountryField;
     @FXML
@@ -123,7 +124,7 @@ public class ClientController {
     @FXML
     private TableColumn<FactoryModel, String> factoryModelTableModel;
     @FXML
-    private TableColumn<FactoryModel, String> factoryModelTableFactory;
+    private TableColumn<FactoryModel, Integer> factoryModelTableFactory;
 
     //DEALER MANAGEMENT
     @FXML
@@ -151,7 +152,7 @@ public class ClientController {
     @FXML
     private TableColumn<Dealer, String> dealersTableAddress;
     @FXML
-    private TableColumn<Dealer, String> dealersTableNumber;
+    private TableColumn<Dealer, Integer> dealersTableNumber;
 
     //BRAND-MODEL MANAGEMENT
     @FXML
@@ -226,7 +227,7 @@ public class ClientController {
             if (client.connectToDatabase(login, password, accountType)) {
                 logInAs(accountType);
             } else {
-                //error
+                loginErrorLabel.setText("Can't connect to database, check your login/password.");
             }
         }
         else {
@@ -275,7 +276,7 @@ public class ClientController {
     }
 
     private void initCarStoreView() {
-        //ustawianie choiceboxow
+        //TODO - ustawianie choiceboxow
     }
 
     @FXML
@@ -332,7 +333,7 @@ public class ClientController {
         factoryOrdersTableModel.setCellValueFactory(new PropertyValueFactory<>("model"));
         factoryOrdersTableAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
         factoryOrdersTableAccomplished.setCellValueFactory(new PropertyValueFactory<>("accomplished"));
-        factoryOrdersTable.setItems(Order.getOrders());
+        factoryOrdersTable.setItems(Order.getOrders(client.connection));
     }
 
     @FXML
@@ -399,8 +400,8 @@ public class ClientController {
         factoriesTableCity.setCellValueFactory(new PropertyValueFactory<>("city"));
         factoriesTableAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         factoriesTableNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
-        factoriesTable.setItems(Factory.getFactories());
-        //TODO - sciagniecie listy fabryk z bazy
+        factoryList = Factory.getFactories(client.connection);
+        factoriesTable.setItems(factoryList);
     }
 
     @FXML
@@ -410,7 +411,9 @@ public class ClientController {
         String address = newFactoryAddressField.getText();
         String number = newFactoryNumberField.getText();
         if(country != null && city != null && address != null && number != null) {
-            if (Factory.addFactory(country, city, address, number)) {
+            if (Factory.addFactory(client.connection, country, city, address, number)) {
+                factoryList.add(new Factory(0, country, city, address, Integer.parseInt(number), 0));
+                factoriesTable.setItems(factoryList);
                 //TODO - print message
             } else {
                 //TODO - print error
@@ -425,7 +428,7 @@ public class ClientController {
     private void deleteFactoryButtonOnClick(ActionEvent e) {
         Factory factoryToDelete = factoriesTable.getSelectionModel().getSelectedItem();
         if(factoryToDelete != null) {
-            if(Factory.deleteFactory(factoryToDelete)) {
+            if(Factory.deleteFactory(client.connection, factoryToDelete)) {
                 ObservableList<Factory> newList = factoriesTable.getItems();
                 newList.remove(factoryToDelete);
                 factoriesTable.setItems(newList);
@@ -445,7 +448,7 @@ public class ClientController {
         brandModelList.clear();
         factoryList.clear();
         brandModelList = BrandModel.getBrandModels();
-        factoryList = Factory.getFactoryList();
+        factoryList = Factory.getFactories(client.connection);
 
         ObservableList<String> brand = FXCollections.observableArrayList();
         ObservableList<String> factory = FXCollections.observableArrayList();
@@ -559,7 +562,7 @@ public class ClientController {
         String city = addCarStoreCityField.getText();
         String address = addCarStoreAddressField.getText();
         if(country != null && city != null && address != null) {
-            if(CarStore.addCarStore(country, city, address)) {
+            if(CarStore.addCarStore("DEALER ID",country, city, address)) { //TODO - DEALER ID
                 //message
             }
             else {

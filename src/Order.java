@@ -1,21 +1,31 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.Connection;
+
 public class Order {
-    public String id;
-    public String factoryId;
+    public int id;
+    public int factoryId;
     public String brand;
     public String model;
-    public String amount;
-    public String accomplished;
+    public int amount;
+    public boolean accomplished;
 
-    public Order(String id, String brand, String model, String amount) {
+    public Order(int id, int factoryId, String brand, String model, int amount, boolean accomplished) {
         this.id = id;
-        this.factoryId = null;
+        this.factoryId = factoryId;
         this.brand = brand;
         this.model = model;
         this.amount = amount;
-        this.accomplished = "no";
+        this.accomplished = accomplished;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getFactoryId() {
+        return factoryId;
     }
 
     public String getBrand() {
@@ -26,11 +36,11 @@ public class Order {
         return model;
     }
 
-    public String getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public String getAccomplished() {
+    public boolean getAccomplished() {
         return accomplished;
     }
 
@@ -39,13 +49,13 @@ public class Order {
         return true;
     }
 
-    public static ObservableList<Order> getOrders() {
+    public static ObservableList<Order> getOrders(Connection connection) {
         ObservableList<Order> list = FXCollections.observableArrayList();
-        list.add(new Order("1", "brand", "model", "amount"));
-        list.add(new Order("2", "brand", "model", "amount"));
-        list.add(new Order("3", "brand1", "model1", "21312"));
-        list.add(new Order("4", "brand2", "model2", "100"));
-        list.add(new Order("5", "brand3", "model3", "2000"));
+        list.add(new Order(1, 1, "brand", "model", 123, false));
+        list.add(new Order(2, 1, "brand", "model", 100, false));
+        list.add(new Order(3, 1, "brand1", "model1", 21312, false));
+        list.add(new Order(4, 1, "brand2", "model2", 100, false));
+        list.add(new Order(5, 1, "brand3", "model3", 2000, false));
         return list;
     }
 

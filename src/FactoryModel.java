@@ -4,19 +4,19 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 
 public class FactoryModel {
-    String factoryId;
-    String modelId;
+    int factoryId;
+    int modelId;
 
-    public FactoryModel(String factoryId, String modelId) {
+    public FactoryModel(int factoryId, int modelId) {
         this.factoryId = factoryId;
         this.modelId = modelId;
     }
 
-    public String getFactoryId() {
+    public int getFactoryId() {
         return factoryId;
     }
 
-    public String getModelId() {
+    public int getModelId() {
         return modelId;
     }
 
