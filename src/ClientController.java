@@ -134,6 +134,8 @@ public class ClientController {
     @FXML
     private Button addDealerButton;
     @FXML
+    private TextField addDealerIdField;
+    @FXML
     private TextField addDealerCountryField;
     @FXML
     private TextField addDealerCityField;
@@ -429,9 +431,8 @@ public class ClientController {
         Factory factoryToDelete = factoriesTable.getSelectionModel().getSelectedItem();
         if(factoryToDelete != null) {
             if(Factory.deleteFactory(client.connection, factoryToDelete)) {
-                ObservableList<Factory> newList = factoriesTable.getItems();
-                newList.remove(factoryToDelete);
-                factoriesTable.setItems(newList);
+                factoryList.remove(factoryToDelete);
+                factoriesTable.setItems(factoryList);
                 //TODO - print message
             }
             else {
@@ -498,7 +499,7 @@ public class ClientController {
     //DEALER MANAGEMENT
     private void initDealerManagementView() {
         dealersList.clear();
-        dealersList = Dealer.getDealers();
+        dealersList = Dealer.getDealers(client.connection);
         dealersTableId.setCellValueFactory(new PropertyValueFactory<>("id"));
         dealersTableCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
         dealersTableCity.setCellValueFactory(new PropertyValueFactory<>("city"));
@@ -510,18 +511,32 @@ public class ClientController {
 
     @FXML
     private void removeDealerButtonOnClick(ActionEvent e) {
-
+        Dealer dealerToDelete = dealersTable.getSelectionModel().getSelectedItem();
+        if(dealerToDelete != null) {
+            if(Dealer.deleteDealer(client.connection, dealerToDelete)) {
+                dealersList.remove(dealerToDelete);
+                dealersTable.setItems(dealersList);
+                //TODO - print message
+            }
+            else {
+                //TODO - print error
+            }
+        }
+        else {
+            //TODO - print error
+        }
     }
 
     @FXML
     private void addDealerButtonOnClick(ActionEvent e) {
+        String id = addDealerIdField.getText();
         String country = addDealerCountryField.getText();
         String city = addDealerCityField.getText();
         String address = addDealerAddressField.getText();
         String number = addDealerNumberField.getText();
-        if(country != null && city != null && address != null && number != null) {
-            if(Dealer.addDealer(country, city, address, number)) {
-                //message
+        if(id != null && country != null && city != null && address != null && number != null) {
+            if(Dealer.addDealer(client.connection, id, country, city, address, number)) {
+                dealersList.add(new Dealer(id, country, city, address, Integer.parseInt(number)));
             }
             else {
                 //error

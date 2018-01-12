@@ -353,41 +353,46 @@
             </Label>
             <Button fx:id="removeDealerButton" layoutX="163.0" layoutY="610.0" mnemonicParsing="false" onAction="#removeDealerButtonOnClick" text="Remove Dealer" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
-                  <Insets top="450.0" />
+                  <Insets top="445.0" />
                </StackPane.margin>
             </Button>
             <TextField fx:id="addDealerCountryField" promptText="Country" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
-                  <Insets left="50.0" right="320.0" top="500.0" />
+                  <Insets left="50.0" right="320.0" top="535.0" />
                </StackPane.margin>
             </TextField>
             <TextField fx:id="addDealerCityField" layoutX="60.0" layoutY="510.0" promptText="City" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
-                  <Insets left="320.0" right="50.0" top="500.0" />
+                  <Insets left="320.0" right="50.0" top="535.0" />
                </StackPane.margin>
             </TextField>
             <TextField fx:id="addDealerAddressField" layoutX="60.0" layoutY="510.0" promptText="Address" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
-                  <Insets left="50.0" right="320.0" top="550.0" />
+                  <Insets left="50.0" right="320.0" top="580.0" />
                </StackPane.margin>
             </TextField>
             <TextField fx:id="addDealerNumberField" layoutX="60.0" layoutY="560.0" promptText="Phone Number" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
-                  <Insets left="320.0" right="50.0" top="550.0" />
+                  <Insets left="320.0" right="50.0" top="580.0" />
                </StackPane.margin>
             </TextField>
             <TableView fx:id="dealersTable" prefHeight="200.0" prefWidth="200.0" StackPane.alignment="TOP_CENTER">
               <columns>
-                <TableColumn fx:id="dealersTableId" prefWidth="83.0" text="ID" />
-                <TableColumn fx:id="dealersTableCountry" prefWidth="74.0" text="Country" />
-                  <TableColumn fx:id="dealersTableCity" prefWidth="90.0" text="City" />
-                  <TableColumn fx:id="dealersTableAddress" prefWidth="137.0" text="Address" />
+                <TableColumn fx:id="dealersTableId" prefWidth="101.0" text="Name" />
+                <TableColumn fx:id="dealersTableCountry" prefWidth="77.0" text="Country" />
+                  <TableColumn fx:id="dealersTableCity" prefWidth="84.0" text="City" />
+                  <TableColumn fx:id="dealersTableAddress" prefWidth="122.0" text="Address" />
                   <TableColumn fx:id="dealersTableNumber" prefWidth="115.0" text="Phone Number" />
               </columns>
                <StackPane.margin>
                   <Insets bottom="370.0" left="50.0" right="50.0" top="100.0" />
                </StackPane.margin>
             </TableView>
+            <TextField fx:id="addDealerIdField" layoutX="60.0" layoutY="545.0" promptText="Dealer's Name" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets left="50.0" right="50.0" top="490.0" />
+               </StackPane.margin>
+            </TextField>
          </children>
       </StackPane>
       <StackPane fx:id="brandModelManagementView" disable="true" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="200.0" visible="false">
