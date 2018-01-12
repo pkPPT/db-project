@@ -31,7 +31,7 @@ DROP TABLE IF EXISTS `Brand_Model`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Brand_Model` (
-  `ID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Brand` varchar(100) DEFAULT NULL,
   `Model` varchar(100) DEFAULT NULL,
   `In_Production` tinyint(1) DEFAULT NULL,
@@ -80,7 +80,7 @@ DROP TABLE IF EXISTS `Factory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Factory` (
-  `ID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Country` varchar(100) DEFAULT NULL,
   `City` varchar(100) DEFAULT NULL,
   `Address` varchar(100) DEFAULT NULL,

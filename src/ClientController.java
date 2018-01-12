@@ -120,6 +120,8 @@ public class ClientController {
     @FXML
     private Button signModelToFactoryButton;
     @FXML
+    private Button removeModelFromFactoryButton;
+    @FXML
     private TableView<FactoryModel> factoryModelTable;
     @FXML
     private TableColumn<FactoryModel, String> factoryModelTableModel;
@@ -455,32 +457,70 @@ public class ClientController {
 
     //FACTORY-MODEL MANAGEMENT
     public void initFactoryModelManagementView() {
-        brandModelList.clear();
-        factoryList.clear();
+//        brandModelList.clear();
+//        factoryList.clear();
+        factoryModelList = FactoryModel.getAll(client.connection);
         brandModelList = BrandModel.getBrandModels(client.connection);
         factoryList = Factory.getFactories(client.connection);
 
-        ObservableList<String> brand = FXCollections.observableArrayList();
-        ObservableList<String> factory = FXCollections.observableArrayList();
-        for(BrandModel b : brandModelList) {
-            brand.add(b.getBrand() + "/" + b.getModel());
-        }
-        for(Factory f : factoryList) {
-            factory.add(f.getCountry() + "/" + f.getCity() + "/" + f.getAddress());
-        }
+        ObservableList<String> factories = FXCollections.observableArrayList();
+        ObservableList<String> models = FXCollections.observableArrayList();
 
-        factoryModelBoxModel.setItems(brand);
-        factoryModelBoxFactory.setItems(factory);
+        for(Factory f: factoryList) {
+            factories.add(String.valueOf(f.getId()));
+        }
+        factoryModelBoxFactory.setItems(factories);
+        for(BrandModel bM: brandModelList) {
+            models.add(bM.getBrand()+"/"+bM.getModel());
+        }
+        factoryModelBoxModel.setItems(models);
 
-        factoryModelList.clear();
-        factoryModelTableFactory.setCellValueFactory(new PropertyValueFactory<>("factoryId"));
-        factoryModelTableModel.setCellValueFactory(new PropertyValueFactory<>("modelId"));
+        factoryModelTableFactory.setCellValueFactory(new PropertyValueFactory<>("factoryProperties"));
+        factoryModelTableModel.setCellValueFactory(new PropertyValueFactory<>("brandModel"));
         factoryModelTable.setItems(factoryModelList);
     }
 
     @FXML
     private void signModelToFactoryButtonOnClick(ActionEvent e) {
-        //TODO
+        String factory = factoryModelBoxFactory.getValue();
+        String model = factoryModelBoxModel.getValue();
+        if(factory != null && model != null) {
+            Factory choosenFactory = null;
+            BrandModel choosenModel = null;
+            for(Factory f: factoryList) {
+                if(String.valueOf(f.getId()).equals(factory)) {
+                    choosenFactory = f;
+                    break;
+                }
+            }
+            for(BrandModel bM: brandModelList) {
+                if(model.equals(bM.getBrand() + "/" + bM.getModel())) {
+                    choosenModel = bM;
+                    break;
+                }
+            }
+            if(FactoryModel.addFactoryModel(client.connection, choosenFactory.getId(), choosenModel.getId())) {
+                factoryModelList = FactoryModel.getAll(client.connection);
+            }
+        }
+    }
+
+    @FXML
+    private void removeModelFromFactoryButtonOnClick(ActionEvent e) {
+        FactoryModel factoryModelToDelete = factoryModelTable.getSelectionModel().getSelectedItem();
+        if(factoryModelToDelete != null) {
+            if(FactoryModel.deleteFactoryModel(client.connection, factoryModelToDelete)) {
+                factoryModelList.remove(factoryModelToDelete);
+                factoryModelTable.setItems(factoryModelList);
+                //TODO - print message
+            }
+            else {
+                //TODO - print error
+            }
+        }
+        else {
+            //TODO - print error
+        }
     }
 
     @FXML
@@ -488,21 +528,56 @@ public class ClientController {
         showAvailableModels();
     }
 
-    //show models for chosen factory
+    @FXML
+    private void showAll(ActionEvent e) {
+        factoryModelList = FactoryModel.getAll(client.connection);
+        factoryModelTable.setItems(factoryModelList);
+    }
+
+    //show models for chosen factory and brandModel
     private void showAvailableModels() {
         String factory = factoryModelBoxFactory.getValue();
-        Factory choosenFactory = null;
-        if(factory != null) {
-            String[] factoryProperties = factory.split("/");
-            for(Factory f: factoryList) {
-                if(f.getProperties().equals(factory)) {
+        String model = factoryModelBoxModel.getValue();
+        if(model == null && factory != null) {
+            Factory choosenFactory = null;
+            for (Factory f : factoryList) {
+                if (String.valueOf(f.getId()).equals(factory)) {
                     choosenFactory = f;
                     break;
                 }
             }
+            factoryModelList = FactoryModel.getFactoryModelList(client.connection, choosenFactory);
+            factoryModelTable.setItems(factoryModelList);
         }
-
-        factoryModelList = FactoryModel.getFactoryModelList(choosenFactory);
+        else if(model != null && factory == null) {
+            BrandModel choosenModel = null;
+            for(BrandModel bM: brandModelList) {
+                if(model.equals(bM.getBrand() + "/" + bM.getModel())) {
+                    choosenModel = bM;
+                    break;
+                }
+            }
+            factoryModelList = FactoryModel.getFactoryModelList(client.connection, choosenModel);
+            factoryModelTable.setItems(factoryModelList);
+        }
+        else if(model != null && factory != null) {
+            BrandModel choosenModel = null;
+            Factory choosenFactory = null;
+            for(BrandModel bM: brandModelList) {
+                if(model.equals(bM.getBrand() + "/" + bM.getModel())) {
+                    choosenModel = bM;
+                    break;
+                }
+            }
+            for (Factory f : factoryList) {
+                if (String.valueOf(f.getId()).equals(factory)) {
+                    choosenFactory = f;
+                    break;
+                }
+            }
+            factoryModelList = FactoryModel.getFactoryModelList(client.connection, choosenModel, choosenFactory);
+            factoryModelTable.setItems(factoryModelList);
+        }
     }
 
     //DEALER MANAGEMENT
