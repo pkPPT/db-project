@@ -167,7 +167,14 @@ public class ClientController {
     private Button addBrandModelButton;
     @FXML
     private Button removeBrandModelButton;
-    //TODO - table with cars
+    @FXML
+    private TableView<BrandModel> brandModelTable;
+    @FXML
+    private TableColumn<BrandModel, String> brandModelTableBrand;
+    @FXML
+    private TableColumn<BrandModel, String> brandModelTableModel;
+    @FXML
+    private TableColumn<BrandModel, Boolean> brandModelTableInProduction;
 
     //CAR STORE MANAGEMENT
     @FXML
@@ -319,6 +326,7 @@ public class ClientController {
                     dealerManagementView.setDisable(false);
                     break;
                 case("Brand-Model Management"):
+                    initBrandModelManagementView();
                     brandModelManagementView.setVisible(true);
                     brandModelManagementView.setDisable(false);
                     break;
@@ -414,7 +422,8 @@ public class ClientController {
         String number = newFactoryNumberField.getText();
         if(country != null && city != null && address != null && number != null) {
             if (Factory.addFactory(client.connection, country, city, address, number)) {
-                factoryList.add(new Factory(0, country, city, address, Integer.parseInt(number), 0));
+                factoryList.clear();
+                factoryList = Factory.getFactories(client.connection);
                 factoriesTable.setItems(factoryList);
                 //TODO - print message
             } else {
@@ -448,7 +457,7 @@ public class ClientController {
     public void initFactoryModelManagementView() {
         brandModelList.clear();
         factoryList.clear();
-        brandModelList = BrandModel.getBrandModels();
+        brandModelList = BrandModel.getBrandModels(client.connection);
         factoryList = Factory.getFactories(client.connection);
 
         ObservableList<String> brand = FXCollections.observableArrayList();
@@ -548,9 +557,30 @@ public class ClientController {
     }
 
     //BRAND-MODEL MANAGEMENT
+    private void initBrandModelManagementView() {
+        brandModelList.clear();
+        brandModelList = BrandModel.getBrandModels(client.connection);
+        brandModelTableBrand.setCellValueFactory(new PropertyValueFactory<>("brand"));
+        brandModelTableModel.setCellValueFactory(new PropertyValueFactory<>("model"));
+        brandModelTableInProduction.setCellValueFactory(new PropertyValueFactory<>("inProduction"));
+        brandModelTable.setItems(brandModelList);
+    }
     @FXML
     private void removeBrandModelButtonOnClick(ActionEvent e) {
-
+        BrandModel brandModelToDelete = brandModelTable.getSelectionModel().getSelectedItem();
+        if(brandModelToDelete != null) {
+            if(BrandModel.deleteBrandModel(client.connection, brandModelToDelete)) {
+                brandModelList = BrandModel.getBrandModels(client.connection);
+                brandModelTable.setItems(brandModelList);
+                //TODO - print message
+            }
+            else {
+                //TODO - print error
+            }
+        }
+        else {
+            //TODO - print error
+        }
     }
 
     @FXML
@@ -558,7 +588,9 @@ public class ClientController {
         String brand = addBrandModelBrandField.getText();
         String model = addBrandModelModelField.getText();
         if(brand != null && model != null) {
-            if(BrandModel.addBrandModel(brand, model)) {
+            if(BrandModel.addBrandModel(client.connection, brand, model)) {
+                brandModelList.add(new BrandModel(0, brand, model, false));
+                brandModelTable.setItems(brandModelList);
                 //message
             }
             else {

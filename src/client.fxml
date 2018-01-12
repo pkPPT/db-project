@@ -430,6 +430,16 @@
                   <Insets left="320.0" right="50.0" top="550.0" />
                </StackPane.margin>
             </TextField>
+            <TableView fx:id="brandModelTable" prefHeight="200.0" prefWidth="200.0" StackPane.alignment="TOP_CENTER">
+              <columns>
+                <TableColumn fx:id="brandModelTableBrand" prefWidth="190.0" text="Brand" />
+                <TableColumn fx:id="brandModelTableModel" prefWidth="190.0" text="Model" />
+                  <TableColumn fx:id="brandModelTableInProduction" prefWidth="120.0" text="In Production" />
+              </columns>
+               <StackPane.margin>
+                  <Insets bottom="350.0" left="50.0" right="50.0" top="100.0" />
+               </StackPane.margin>
+            </TableView>
          </children>
       </StackPane>
       <StackPane fx:id="carStoreManagementView" disable="true" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="200.0" visible="false">

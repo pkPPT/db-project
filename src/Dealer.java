@@ -77,9 +77,9 @@ public class Dealer {
             ResultSet rs = stmt.executeQuery(query);
 
             while(rs.next()) {
-                Dealer f = new Dealer(rs.getString("id"), rs.getString("country"),
+                Dealer d = new Dealer(rs.getString("id"), rs.getString("country"),
                         rs.getString("city"), rs.getString("address"), rs.getInt("phone_number"));
-                list.add(f);
+                list.add(d);
             }
         } catch(SQLException ex) { ex.printStackTrace(); }
 
