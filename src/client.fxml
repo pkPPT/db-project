@@ -312,6 +312,11 @@
                   <Insets left="300.0" top="600.0" />
                </StackPane.margin>
             </Button>
+            <Button layoutX="432.0" layoutY="610.0" mnemonicParsing="false" onAction="#showAll" text="Show All" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets right="310.0" top="600.0" />
+               </StackPane.margin>
+            </Button>
          </children>
       </StackPane>
       <StackPane fx:id="companyWorkerView" disable="true" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="200.0" visible="false">
