@@ -3,7 +3,6 @@
 -- Host: 127.0.0.1    Database: concerndb
 -- ------------------------------------------------------
 -- Server version	10.2.9-MariaDB
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -15,6 +14,8 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+CREATE DATABASE IF NOT EXISTS concerndb;
+USE concerndb;
 --
 -- Table structure for table `brand_model`
 --
@@ -505,3 +506,100 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-01-13  3:37:55
+
+DROP TABLE IF EXISTS users;
+CREATE TABLE users(
+  login VARCHAR(100) NOT NULL,
+  is_company TINYINT DEFAULT FALSE,
+  is_worker TINYINT DEFAULT FALSE,
+  dealer_id VARCHAR(100) DEFAULT NULL,
+  car_store_id INT DEFAULT NULL,
+  factory_id INT DEFAULT NULL,
+  PRIMARY KEY (login)
+);
+# -----------------------------------------------------------------------------------------------
+# SELECT * FROM dealer;
+# INSERT INTO users(login, dealer_id) VALUES('Krotoski-Cichy', 'Krotoski-Cichy');
+# INSERT INTO users(login, is_company, is_worker, dealer_id, car_store_id, factory_id)
+# VALUES('root', TRUE, TRUE, '%', 1, 1);
+#
+#
+# SELECT * FROM users;
+#
+
+CREATE USER 'Krotoski-Cichy'@'%';
+SET PASSWORD FOR 'Krotoski-Cichy'@'%' = PASSWORD('1234');
+
+GRANT SELECT ON concerndb.dealer TO 'Krotoski-Cichy'@'%';
+GRANT INSERT, SELECT, DELETE ON concerndb.car_store TO 'Krotoski-Cichy'@'%';
+GRANT INSERT, SELECT ON concerndb.dealer_orders TO 'Krotoski-Cichy'@'%';
+GRANT SELECT ON concerndb.brand_model TO 'Krotoski-Cichy'@'%';
+GRANT SELECT ON concerndb.users TO 'Krotoski-Cichy'@'%';
+GRANT SELECT ON concerndb.orders_log TO 'Krotoski-Cichy'@'%';
+GRANT SELECT ON concerndb.transaction TO 'Krotoski-Cichy'@'%';
+FLUSH PRIVILEGES;
+
+# Przykladowy dealer user
+CREATE USER 'dealertest'@'%';
+SET PASSWORD FOR 'dealertest'@'%' = PASSWORD('test');
+GRANT SELECT ON concerndb.dealer TO 'dealertest'@'%';
+GRANT INSERT, SELECT, DELETE ON concerndb.car_store TO 'dealertest'@'%';
+GRANT INSERT, SELECT ON concerndb.dealer_orders TO 'dealertest'@'%';
+GRANT SELECT ON concerndb.brand_model TO 'dealertest'@'%';
+GRANT SELECT ON concerndb.users TO 'dealertest'@'%';
+GRANT SELECT ON concerndb.orders_log TO 'dealertest'@'%';
+GRANT SELECT ON concerndb.transaction TO 'dealertest'@'%';
+
+INSERT INTO dealer(ID, Country, City, Address, Phone_Number, Is_Available) VALUES('dealertest', 'Poland', 'Wroclaw', 'ul. Legnicka 1', 000000000, TRUE);
+INSERT INTO users(login, dealer_id) VALUES('dealertest', 'dealertest');
+
+
+# Przykladowy factory user
+CREATE USER 'factorytest'@'%';
+SET PASSWORD FOR 'factorytest'@'%' = PASSWORD('test');
+GRANT SELECT ON concerndb.factory_model TO 'factorytest'@'%';
+GRANT SELECT, DELETE, UPDATE ON concerndb.production_orders TO 'factorytest'@'%';
+GRANT SELECT ON concerndb.brand_model TO 'factorytest'@'%';
+GRANT SELECT ON concerndb.users TO 'factorytest'@'%';
+FLUSH PRIVILEGES ;
+
+INSERT INTO factory(Country, City, Address, Phone_Number, Workers, Is_Available) VALUES('Poland', 'Wroclaw', 'Legnicka 1', 100000000, 0, TRUE);
+INSERT INTO users(login, factory_id) VALUES('factorytest', 2);
+
+# Przykladowy carstore user
+CREATE USER 'carstoretest'@'%';
+SET PASSWORD FOR 'carstoretest'@'%' = PASSWORD('test');
+GRANT INSERT, SELECT ON concerndb.transaction TO 'carstoretest'@'%';
+GRANT SELECT ON concerndb.brand_model TO 'carstoretest'@'%';
+GRANT SELECT ON concerndb.users TO 'carstoretest'@'%';
+FLUSH PRIVILEGES ;
+
+INSERT INTO car_store(ID_Dealer, Country, City, Address) VALUES('dealertest', 'Poland', 'Wroclaw', 'Legnicka 1');
+INSERT INTO users(login, car_store_id) VALUES('carstoretest', 1);
+
+# Przykladowy worker user
+CREATE USER 'workertest'@'%';
+SET PASSWORD FOR 'workertest'@'%' = PASSWORD('test');
+GRANT INSERT, SELECT, UPDATE ON concerndb.dealer_orders TO 'carstoretest'@'%';
+GRANT SELECT ON concerndb.factory TO 'carstoretest'@'%';
+GRANT SELECT ON concerndb.dealer TO 'carstoretest'@'%';
+FLUSH PRIVILEGES;
+
+INSERT INTO users(login, is_worker) VALUES('workertest', TRUE);
+
+# Przykladowy company user
+CREATE USER 'companytest'@'%';
+SET PASSWORD FOR 'companytest'@'%' = PASSWORD('test');
+GRANT INSERT, SELECT, UPDATE, DELETE ON concerndb.dealer TO 'companytest'@'%';
+GRANT INSERT, SELECT, UPDATE, DELETE ON concerndb.factory TO 'companytest'@'%';
+GRANT INSERT, SELECT, UPDATE, DELETE ON concerndb.factory_model TO 'companytest'@'%';
+GRANT SELECT ON concerndb.car_store TO 'companytest'@'%';
+GRANT SELECT ON concerndb.dealer_orders TO 'companytest'@'%';
+GRANT INSERT, SELECT, UPDATE, DELETE ON concerndb.brand_model TO 'companytest'@'%';
+GRANT SELECT ON concerndb.users TO 'dealertest'@'%';
+GRANT SELECT ON concerndb.production_log TO 'companytest'@'%';
+GRANT SELECT ON concerndb.production_orders TO 'companytest'@'%';
+GRANT SELECT ON concerndb.transaction TO 'companytest'@'%';
+FLUSH PRIVILEGES ;
+
+INSERT INTO users(login, is_company) VALUES('companytest', TRUE);

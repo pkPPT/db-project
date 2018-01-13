@@ -1,3 +1,4 @@
+import com.sun.org.apache.xpath.internal.operations.Or;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +17,8 @@ public class ClientController {
     ObservableList<Factory> factoryList = FXCollections.observableArrayList();
     ObservableList<FactoryModel> factoryModelList = FXCollections.observableArrayList();
     ObservableList<Dealer> dealersList = FXCollections.observableArrayList();
+    ObservableList<CarStore> carStoreList = FXCollections.observableArrayList();
+    ObservableList<Order> orderList = FXCollections.observableArrayList();
 
     //LOGIN
     @FXML
@@ -191,7 +194,14 @@ public class ClientController {
     private Button addCarStoreButton;
     @FXML
     private Button removeCarStoreButton;
-    //TODO - table with car stores
+    @FXML
+    private TableView<CarStore> carStoreTable;
+    @FXML
+    private TableColumn<CarStore, String> carStoreTableCountry;
+    @FXML
+    private TableColumn<CarStore, String> carStoreTableCity;
+    @FXML
+    private TableColumn<CarStore, String> carStoreTableAddress;
 
     //DEALER ORDERS
     @FXML
@@ -202,6 +212,14 @@ public class ClientController {
     private ChoiceBox<String> dealerOrderModelBox;
     @FXML
     private Button addOrderButton;
+    @FXML
+    private TableView<Order> dealerOrdersTable;
+    @FXML
+    private TableColumn<Order, String> dealerOrdersTableBrand;
+    @FXML
+    private TableColumn<Order, String> dealerOrdersTableModel;
+    @FXML
+    private TableColumn<Order, Integer> dealerOrdersTableAmount;
 
     public ClientController(Client client) {
         this.client = client;
@@ -341,21 +359,22 @@ public class ClientController {
 
     //FACTORY
     public void initFactoryView() {
+        brandModelList = BrandModel.getBrandModels(client.connection);
+        orderList = Order.getOrdersForFactory(client.connection, client.factoryId);
         factoryOrdersTableBrand.setCellValueFactory(new PropertyValueFactory<>("brand"));
         factoryOrdersTableModel.setCellValueFactory(new PropertyValueFactory<>("model"));
         factoryOrdersTableAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
         factoryOrdersTableAccomplished.setCellValueFactory(new PropertyValueFactory<>("accomplished"));
-        factoryOrdersTable.setItems(Order.getOrders(client.connection));
+        factoryOrdersTable.setItems(orderList);
     }
 
     @FXML
     private void setOrderStateButtonOnClick(ActionEvent e) {
         Order orderToSet = factoryOrdersTable.getSelectionModel().getSelectedItem();
         if(orderToSet != null) {
-            if(Order.setAsAccomplished(orderToSet)) {
-                ObservableList<Order> newList = factoryOrdersTable.getItems();
-                newList.remove(orderToSet);
-                factoryOrdersTable.setItems(newList);
+            if(Order.setAsAccomplished(client.connection, orderToSet)) {
+                orderList.remove(orderToSet);
+                factoryOrdersTable.setItems(orderList);
                 //TODO - print message
             }
             else {
@@ -376,10 +395,12 @@ public class ClientController {
             dealerView.setVisible(false);
             switch(tool) {
                 case("Car Store Management"):
+                    initCarStoreManagementView();
                     carStoreManagementView.setVisible(true);
                     carStoreManagementView.setDisable(false);
                     break;
                 case("Orders"):
+                    initDealerOrdersView();
                     dealerOrdersView.setVisible(true);
                     dealerOrdersView.setDisable(false);
                     break;
@@ -678,13 +699,23 @@ public class ClientController {
     }
 
     //CAR STORE MANAGEMENT
+    public void initCarStoreManagementView() {
+        carStoreList = CarStore.getCarStoreList(client.connection, client.dealerId);
+        carStoreTableCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+        carStoreTableCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        carStoreTableAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        carStoreTable.setItems(carStoreList);
+    }
+
     @FXML
     private void addCarStoreButtonOnClick(ActionEvent e) {
         String country = addCarStoreCountryField.getText();
         String city = addCarStoreCityField.getText();
         String address = addCarStoreAddressField.getText();
         if(country != null && city != null && address != null) {
-            if(CarStore.addCarStore("DEALER ID",country, city, address)) { //TODO - DEALER ID
+            if(CarStore.addCarStore(client.connection, client.dealerId, country, city, address)) {
+                carStoreList = CarStore.getCarStoreList(client.connection, client.dealerId);
+                carStoreTable.setItems(carStoreList);
                 //message
             }
             else {
@@ -698,10 +729,38 @@ public class ClientController {
 
     @FXML
     private void removeCarStoreButtonOnClick(ActionEvent e) {
-
+        CarStore carStoreToDelete = carStoreTable.getSelectionModel().getSelectedItem();
+        if(carStoreToDelete != null) {
+            if(CarStore.deleteCarStore(client.connection, carStoreToDelete)) {
+                carStoreList = CarStore.getCarStoreList(client.connection, client.dealerId);
+                carStoreTable.setItems(carStoreList);
+                //TODO - print message
+            }
+            else {
+                //TODO - print error
+            }
+        }
+        else {
+            //TODO - print error
+        }
     }
 
     //DEALER ORDERS
+    private void initDealerOrdersView() {
+        orderList = Order.getOrdersForDealer(client.connection, client.dealerId);
+        brandModelList = BrandModel.getBrandModels(client.connection);
+        ObservableList<String> models = FXCollections.observableArrayList();
+
+        for(BrandModel bM: brandModelList) {
+            models.add(bM.getBrand()+"/"+bM.getModel());
+        }
+        dealerOrderModelBox.setItems(models);
+
+        dealerOrdersTableBrand.setCellValueFactory(new PropertyValueFactory<>("brand"));
+        dealerOrdersTableModel.setCellValueFactory(new PropertyValueFactory<>("model"));
+        dealerOrdersTableAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        dealerOrdersTable.setItems(orderList);
+    }
     @FXML
     private void addOrderButtonOnClick(ActionEvent e) {
         String brandModel = dealerOrderModelBox.getValue();
@@ -709,8 +768,9 @@ public class ClientController {
             String[] model = brandModel.split("/");
             String amount = dealerOrderAmountField.getText();
             if (model[0] != null && model[1] != null && amount != null) {
-                if (Order.addOrder(model[0], model[1], amount)) {
-                    //msg
+                if (Order.addOrder(client.connection, client.dealerId, model[0], model[1], amount)) {
+                    orderList = Order.getOrdersForDealer(client.connection, client.dealerId);
+                    dealerOrdersTable.setItems(orderList);
                 } else {
                     //error
                 }
