@@ -40,10 +40,11 @@ public class CarStore {
 
     public static ObservableList<CarStore> getCarStoreList(Connection connection, String dealerId) {
         ObservableList<CarStore> list = FXCollections.observableArrayList();
-        String query = "SELECT * FROM car_store WHERE car_store.id_dealer = '" +  dealerId + "'";
         try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM car_store WHERE car_store.id_dealer = ?");
+            stmt.setString(1, dealerId);
+
+            ResultSet rs = stmt.executeQuery();
 
             while(rs.next()) {
                 CarStore cS = new CarStore(rs.getInt("id"), rs.getString("id_dealer"),
@@ -56,8 +57,9 @@ public class CarStore {
 
     public static boolean addCarStore(Connection connection, String dealerId, String country, String city, String address) {
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Car_Store(id_dealer, country, city, address) " +
-                    "VALUES( ?, ?, ?, ?)");
+//            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Car_Store(id_dealer, country, city, address) " +
+//                    "VALUES( ?, ?, ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("CALL add_car_store(?, ?, ?, ?)");
             stmt.setString(1, dealerId);
             stmt.setString(2, country);
             stmt.setString(3, city);
@@ -73,7 +75,8 @@ public class CarStore {
 
     public static boolean deleteCarStore(Connection connection, CarStore carStore) {
         try {
-            PreparedStatement stmt = connection.prepareStatement("DELETE FROM Car_Store WHERE ID = ?");
+//            PreparedStatement stmt = connection.prepareStatement("DELETE FROM Car_Store WHERE ID = ?");
+            PreparedStatement stmt = connection.prepareStatement("CALL delete_car_store(?)");
             stmt.setInt(1, carStore.getId());
             stmt.executeUpdate();
         } catch(SQLException ex) {

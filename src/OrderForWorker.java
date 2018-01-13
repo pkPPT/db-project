@@ -50,14 +50,14 @@ public class OrderForWorker {
 
     public static boolean signFactoryToOrder(Connection connection, Factory factory, OrderForWorker order) {
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Production_Orders(id_dealer, id_factory, id_brand_model, amount, accomplished) " +
-                    "VALUES(?, ?, ?, ?, ?)");
+//            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Production_Orders(id_dealer, id_factory, id_brand_model, amount, accomplished) " +
+//                    "VALUES(?, ?, ?, ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("CALL manage_order(?, ?, ?, ?)");
 
             stmt.setString(1, order.getDealerId());
             stmt.setInt(2, factory.getId());
             stmt.setInt(3, order.getBrandModelId());
             stmt.setInt(4, order.getAmount());
-            stmt.setBoolean(5, false);
 
             stmt.executeUpdate();
         } catch(SQLException ex) {

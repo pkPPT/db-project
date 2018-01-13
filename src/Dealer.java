@@ -40,8 +40,9 @@ public class Dealer {
 
     public static boolean addDealer(Connection connection, String id, String country, String city, String address, String number) {
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Dealer(id, country, city, address, phone_number) " +
-                    "VALUES( ?, ?, ?, ?, ?)");
+//            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Dealer(id, country, city, address, phone_number) " +
+//                    "VALUES( ?, ?, ?, ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("CALL add_dealer(?, ?, ?, ?, ?)");
             stmt.setString(1, id);
             stmt.setString(2, country);
             stmt.setString(3, city);
@@ -58,7 +59,8 @@ public class Dealer {
 
     public static boolean deleteDealer(Connection connection, Dealer dealer) {
         try {
-            PreparedStatement stmt = connection.prepareStatement("DELETE FROM Dealer WHERE id = ?");
+//            PreparedStatement stmt = connection.prepareStatement("DELETE FROM Dealer WHERE id = ?");
+            PreparedStatement stmt = connection.prepareStatement("CALL delete_dealer(?)");
             stmt.setString(1, dealer.getId());
             stmt.executeUpdate();
         } catch(SQLException ex) {
@@ -71,7 +73,7 @@ public class Dealer {
     public static ObservableList<Dealer> getDealers(Connection connection) {
         ObservableList<Dealer> list = FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM Dealer";
+        String query = "SELECT * FROM Dealer WHERE Dealer.is_available = TRUE";
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);

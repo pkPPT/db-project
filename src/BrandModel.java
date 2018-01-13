@@ -53,11 +53,11 @@ public class BrandModel {
 
     public static boolean addBrandModel(Connection connection, String brand, String model) {
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Brand_Model(brand, model, in_production) " +
-                    "VALUES( ?, ?, ?)");
+//            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Brand_Model(brand, model, in_production) " +
+//                    "VALUES( ?, ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("CALL add_model(?, ?)");
             stmt.setString(1, brand);
             stmt.setString(2, model);
-            stmt.setBoolean(3, false);
 
             stmt.executeUpdate();
         } catch(SQLException ex) {

@@ -287,7 +287,7 @@ DELIMITER ;;
     DECLARE amount INT;
     DECLARE c INT;
 
-    DECLARE curP CURSOR FOR(SELECT p.ID, p.ID_Dealer, p.ID_Brand_Model, p.Amount FROM Production_Orders AS p WHERE Production_Orders.ID_Factory = OLD.ID_Factory);
+    DECLARE curP CURSOR FOR(SELECT p.ID, p.ID_Dealer, p.ID_Brand_Model, p.Amount FROM Production_Orders AS p WHERE p.ID_Factory = OLD.ID_Factory);
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
     SELECT count(*) INTO c FROM Factory_Model WHERE ID_Brand_Model = OLD.ID_Brand_Model GROUP BY Factory_Model.ID_Brand_Model;
@@ -524,10 +524,17 @@ CREATE TABLE users(
 # VALUES('root', TRUE, TRUE, '%', 1, 1);
 #
 #
-# SELECT * FROM users;
+# SELECT * FROM users JOIN car_store ON users.car_store_id=car_store.id;
+# SELECT * FROM car_store;
 #
-# SELECT * FROM dealer_orders;
-# SELECT * FROM orders_log;
+# SELECT * FROM factory;
+# SELECT * FROM users;
+
+
+
+
+
+
 
 
 CREATE USER 'Krotoski-Cichy'@'%';
@@ -540,6 +547,7 @@ GRANT SELECT ON concerndb.brand_model TO 'Krotoski-Cichy'@'%';
 GRANT SELECT ON concerndb.users TO 'Krotoski-Cichy'@'%';
 GRANT SELECT ON concerndb.orders_log TO 'Krotoski-Cichy'@'%';
 GRANT SELECT ON concerndb.transaction TO 'Krotoski-Cichy'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.add_car_store TO 'Krotoski-Cichy'@'%';
 FLUSH PRIVILEGES;
 
 # Przykladowy dealer user
@@ -552,6 +560,9 @@ GRANT SELECT ON concerndb.brand_model TO 'dealertest'@'%';
 GRANT SELECT ON concerndb.users TO 'dealertest'@'%';
 GRANT SELECT ON concerndb.orders_log TO 'dealertest'@'%';
 GRANT SELECT ON concerndb.transaction TO 'dealertest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.add_car_store TO 'dealertest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.delete_car_store TO 'dealertest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.add_order TO 'dealertest'@'%';
 
 INSERT INTO dealer(ID, Country, City, Address, Phone_Number, Is_Available) VALUES('dealertest', 'Poland', 'Wroclaw', 'ul. Legnicka 1', 000000000, TRUE);
 INSERT INTO users(login, dealer_id) VALUES('dealertest', 'dealertest');
@@ -564,6 +575,7 @@ GRANT SELECT ON concerndb.factory_model TO 'factorytest'@'%';
 GRANT SELECT, DELETE, UPDATE ON concerndb.production_orders TO 'factorytest'@'%';
 GRANT SELECT ON concerndb.brand_model TO 'factorytest'@'%';
 GRANT SELECT ON concerndb.users TO 'factorytest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.set_production_accomplished TO 'factorytest'@'%';
 FLUSH PRIVILEGES ;
 
 INSERT INTO factory(Country, City, Address, Phone_Number, Workers, Is_Available) VALUES('Poland', 'Wroclaw', 'Legnicka 1', 100000000, 0, TRUE);
@@ -575,20 +587,25 @@ SET PASSWORD FOR 'carstoretest'@'%' = PASSWORD('test');
 GRANT INSERT, SELECT ON concerndb.transaction TO 'carstoretest'@'%';
 GRANT SELECT ON concerndb.brand_model TO 'carstoretest'@'%';
 GRANT SELECT ON concerndb.users TO 'carstoretest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.add_transaction TO 'carstoretest'@'%';
 FLUSH PRIVILEGES ;
 
 INSERT INTO car_store(ID_Dealer, Country, City, Address) VALUES('dealertest', 'Poland', 'Wroclaw', 'Legnicka 1');
 INSERT INTO users(login, car_store_id) VALUES('carstoretest', 1);
 
 # Przykladowy worker user
-CREATE USER 'workertest'@'%';
-SET PASSWORD FOR 'workertest'@'%' = PASSWORD('test');
-GRANT INSERT, SELECT, UPDATE ON concerndb.dealer_orders TO 'carstoretest'@'%';
-GRANT SELECT ON concerndb.factory TO 'carstoretest'@'%';
-GRANT SELECT ON concerndb.dealer TO 'carstoretest'@'%';
+CREATE USER 'worker'@'%';
+SET PASSWORD FOR 'worker'@'%' = PASSWORD('worker');
+GRANT INSERT, SELECT, UPDATE ON concerndb.dealer_orders TO 'worker'@'%';
+GRANT SELECT ON concerndb.factory TO 'worker'@'%';
+GRANT SELECT ON concerndb.dealer TO 'worker'@'%';
+GRANT SELECT ON concerndb.users TO 'worker'@'%';
+GRANT SELECT ON concerndb.brand_model TO 'worker'@'%';
+GRANT SELECT ON concerndb.factory_model TO 'worker'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.manage_order TO 'worker'@'%';
 FLUSH PRIVILEGES;
 
-INSERT INTO users(login, is_worker) VALUES('workertest', TRUE);
+INSERT INTO users(login, is_worker) VALUES('worker', TRUE);
 
 # Przykladowy company user
 CREATE USER 'companytest'@'%';
@@ -599,10 +616,127 @@ GRANT INSERT, SELECT, UPDATE, DELETE ON concerndb.factory_model TO 'companytest'
 GRANT SELECT ON concerndb.car_store TO 'companytest'@'%';
 GRANT SELECT ON concerndb.dealer_orders TO 'companytest'@'%';
 GRANT INSERT, SELECT, UPDATE, DELETE ON concerndb.brand_model TO 'companytest'@'%';
-GRANT SELECT ON concerndb.users TO 'dealertest'@'%';
+GRANT SELECT ON concerndb.users TO 'companytest'@'%';
 GRANT SELECT ON concerndb.production_log TO 'companytest'@'%';
 GRANT SELECT ON concerndb.production_orders TO 'companytest'@'%';
 GRANT SELECT ON concerndb.transaction TO 'companytest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.add_factory TO 'companytest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.delete_factory TO 'companytest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.assigne_model_to_factory TO 'companytest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.add_dealer TO 'companytest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.delete_dealer TO 'companytest'@'%';
+GRANT EXECUTE ON PROCEDURE concerndb.add_model TO 'companytest'@'%';
 FLUSH PRIVILEGES ;
 
 INSERT INTO users(login, is_company) VALUES('companytest', TRUE);
+SELECT * FROM factory;
+
+
+# ----------------------------------------------------------------------------
+# Procedury
+#
+#
+
+CREATE PROCEDURE add_dealer(IN ID VARCHAR(100), IN Country VARCHAR(30),
+  IN City VARCHAR(50),
+  IN Address VARCHAR(100),
+  IN Phone_Number VARCHAR(20))
+  BEGIN
+    INSERT INTO dealer VALUES(ID, Country, City, Address, Phone_Number, 1);
+  END;
+
+CREATE PROCEDURE delete_dealer(IN ID VARCHAR(100))
+  BEGIN
+    UPDATE dealer SET Is_Available = FALSE WHERE dealer.ID = ID;
+  END;
+
+CREATE PROCEDURE add_car_store(
+  IN ID_Dealer VARCHAR(100),
+  IN Country VARCHAR(30),
+  IN City VARCHAR(50),
+  IN Address VARCHAR(100)
+)
+  BEGIN
+    INSERT INTO car_store(ID_Dealer, Country, City, Address) VALUES(ID_Dealer, Country, City, Address);
+  END;
+
+# DROP PROCEDURE delete_car_store;
+CREATE PROCEDURE delete_car_store(
+  IN ID_Car_Store INT
+)
+  BEGIN
+    UPDATE car_store SET ID_Dealer = NULL WHERE car_store.ID = ID_Car_Store;
+  END;
+
+CREATE PROCEDURE add_factory(
+  IN Country VARCHAR(30),
+  IN City VARCHAR(50),
+  IN Address VARCHAR(100),
+  IN Phone_Number VARCHAR(20),
+  IN Workers INT
+)
+  BEGIN
+    INSERT INTO factory(Country, City, Address, Phone_Number, Workers, Is_Available) VALUES(Country, City, Address, Phone_Number, Workers, TRUE);
+  END;
+
+CREATE PROCEDURE delete_factory(
+  IN ID INT
+)
+  BEGIN
+    UPDATE factory SET Is_Available = FALSE WHERE factory.ID = ID;
+  END;
+
+CREATE PROCEDURE add_transaction(
+  IN ID_Car_store INT,
+  IN ID_Brand_Model INT,
+  IN Type ENUM('Leasing', 'Sale', 'Lend')
+)
+  BEGIN
+    INSERT INTO transaction VALUES(NOW(), ID_Car_store, ID_Brand_Model, Type);
+  END;
+
+# DROP PROCEDURE add_model;
+CREATE PROCEDURE add_model(
+  IN Brand VARCHAR(100),
+  IN Model VARCHAR(100)
+)
+  BEGIN
+    INSERT INTO brand_model(Brand, Model, In_Production) VALUES(Brand, Model, FALSE);
+  END;
+
+CREATE PROCEDURE add_order(
+  IN ID_Dealer VARCHAR(100),
+  IN ID_Brand_Model INT,
+  IN Amount INT
+)
+  BEGIN
+    INSERT INTO dealer_orders(ID_Dealer, ID_Brand_Model, Amount) VALUES(ID_Dealer, ID_Brand_Model, Amount);
+  END;
+
+# DROP PROCEDURE set_production_accomplished;
+CREATE PROCEDURE set_production_accomplished(
+  IN ID_Order INT
+)
+  BEGIN
+    UPDATE production_orders SET Accomplished = TRUE WHERE production_orders.ID = ID_Order;
+  END;
+
+CREATE PROCEDURE assigne_model_to_factory(
+  IN ID_Brand_Model INT,
+  in ID_Factory INT
+)
+  BEGIN
+    INSERT INTO factory_model VALUES(ID_Factory,ID_Brand_Model);
+  END;
+
+# DROP PROCEDURE manage_order;
+CREATE PROCEDURE manage_order(
+  IN ID_Dealer VARCHAR(100),
+  in ID_Factory INT,
+  IN ID_Brand_Model INT,
+  IN Amount INT
+)
+  BEGIN
+    INSERT INTO production_orders(ID_Dealer, ID_Factory, ID_Brand_Model, Amount, Accomplished)
+    VALUES(ID_Dealer, ID_Factory, ID_Brand_Model, Amount, FALSE);
+  END;

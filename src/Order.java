@@ -69,7 +69,8 @@ public class Order {
 
     public static boolean setAsAccomplished(Connection connection, Order order) {
         try {
-            PreparedStatement stmt = connection.prepareStatement("UPDATE production_orders SET accomplished = TRUE WHERE id = ?");
+//            PreparedStatement stmt = connection.prepareStatement("UPDATE production_orders SET accomplished = TRUE WHERE id = ?");
+            PreparedStatement stmt = connection.prepareStatement("CALL set_production_accomplished(?)");
             stmt.setInt(1, order.getId());
 
             stmt.executeUpdate();
@@ -134,7 +135,8 @@ public class Order {
             rs1.next();
             idBrandModel = rs1.getInt("id");
 
-            PreparedStatement stmt2 = connection.prepareStatement("INSERT INTO Dealer_Orders(id_dealer, id_brand_model, amount) VALUES(?, ?, ?)");
+//            PreparedStatement stmt2 = connection.prepareStatement("INSERT INTO Dealer_Orders(id_dealer, id_brand_model, amount) VALUES(?, ?, ?)");
+            PreparedStatement stmt2 = connection.prepareStatement("CALL add_order(?, ?, ?)");
             stmt2.setString(1, dealerId);
             stmt2.setInt(2, idBrandModel);
             stmt2.setInt(3, Integer.parseInt(amount));
