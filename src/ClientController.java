@@ -304,10 +304,6 @@ public class ClientController {
         }
     }
 
-    private void initCarStoreView() {
-        //TODO - ustawianie choiceboxow
-    }
-
     @FXML
     private void logoutButtonOnClick(ActionEvent e) {
         if(client.disconnect()) {
@@ -411,13 +407,25 @@ public class ClientController {
     }
 
     //CAR STORE
+    private void initCarStoreView() {
+        brandModelList = BrandModel.getBrandModels(client.connection);
+        ObservableList<String> models = FXCollections.observableArrayList();
+        for(BrandModel bM: brandModelList) {
+            models.add(bM.getBrand()+"/"+bM.getModel());
+        }
+        transactionModelBox.setItems(models);
+    }
+
     @FXML
     private void addTransactionButtonOnClick(ActionEvent e) {
         transactionInfoLabel.setText("");
         String model = transactionModelBox.getValue();
-        String type = transactionTypeBox.getValue();
+        String type = transactionTypeBox.getValue().toLowerCase();
+        String[] brandModel = model.split("/");
         if(model != null && type != null) {
-
+            if(Transaction.addTransaction(client.connection, client.carStoreId, brandModel[0], brandModel[1], type)) {
+                transactionInfoLabel.setText("Transaction added");
+            }
         }
         else {
             transactionInfoLabel.setText("Pick model and transaction type");
