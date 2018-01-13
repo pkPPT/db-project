@@ -122,6 +122,7 @@ public class Order {
         return list;
     }
 
+
     public static boolean addOrder(Connection connection, String dealerId, String brand, String model, String amount) {
         try {
             int idBrandModel;

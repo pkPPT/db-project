@@ -526,6 +526,9 @@ CREATE TABLE users(
 #
 # SELECT * FROM users;
 #
+# SELECT * FROM dealer_orders;
+# SELECT * FROM orders_log;
+
 
 CREATE USER 'Krotoski-Cichy'@'%';
 SET PASSWORD FOR 'Krotoski-Cichy'@'%' = PASSWORD('1234');

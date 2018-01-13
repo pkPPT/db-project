@@ -19,6 +19,7 @@ public class ClientController {
     ObservableList<Dealer> dealersList = FXCollections.observableArrayList();
     ObservableList<CarStore> carStoreList = FXCollections.observableArrayList();
     ObservableList<Order> orderList = FXCollections.observableArrayList();
+    ObservableList<OrderForWorker> orderForWorkerList = FXCollections.observableArrayList();
 
     //LOGIN
     @FXML
@@ -83,6 +84,32 @@ public class ClientController {
     //COMPANY WORKER
     @FXML
     private StackPane companyWorkerView;
+    @FXML
+    private Button signToFactoryButton;
+    @FXML
+    private Button showFactoriesButton;
+    @FXML
+    private TableView<OrderForWorker> workerOrdersTable;
+    @FXML
+    private TableColumn<OrderForWorker, String> workerOrdersTableBrand;
+    @FXML
+    private TableColumn<OrderForWorker, String> workerOrdersTableModel;
+    @FXML
+    private TableColumn<OrderForWorker, Integer> workerOrdersTableAmount;
+    @FXML
+    private TableColumn<OrderForWorker, String> workerOrdersTableCountry;
+    @FXML
+    private TableColumn<OrderForWorker, String> workerOrdersTableCity;
+    @FXML
+    private TableView<Factory> workerFactoryTable;
+    @FXML
+    private TableColumn<Factory, String> workerFactoryTableCountry;
+    @FXML
+    private TableColumn<Factory, String> workerFactoryTableCity;
+    @FXML
+    private TableColumn<Factory, String> workerFactoryTableAddress;
+    @FXML
+    private TableColumn<Factory, Integer> workerFactoryTableNumber;
 
 
     //FACTORY MANAGEMENT
@@ -296,6 +323,7 @@ public class ClientController {
             case("Company Worker"):
                 loginView.setVisible(false);
                 loginView.setDisable(true);
+                initWorkerView();
                 companyWorkerView.setVisible(true);
                 companyWorkerView.setDisable(false);
                 break;
@@ -433,6 +461,42 @@ public class ClientController {
     }
 
     //COMPANY WORKER
+    private void initWorkerView() {
+        orderForWorkerList = OrderForWorker.getOrdersForWorker(client.connection);
+
+        workerOrdersTableBrand.setCellValueFactory(new PropertyValueFactory<>("brand"));
+        workerOrdersTableModel.setCellValueFactory(new PropertyValueFactory<>("model"));
+        workerOrdersTableAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        workerOrdersTableCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+        workerOrdersTableCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        workerOrdersTable.setItems(orderForWorkerList);
+
+        factoryList.clear();
+        workerFactoryTableCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+        workerFactoryTableCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        workerFactoryTableAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        workerFactoryTableNumber.setCellValueFactory(new PropertyValueFactory<>("number"));
+        workerFactoryTable.setItems(factoryList);
+    }
+
+    @FXML
+    private void signToFactoryButtonOnClick(ActionEvent e) {
+        OrderForWorker order = workerOrdersTable.getSelectionModel().getSelectedItem();
+        Factory factory = workerFactoryTable.getSelectionModel().getSelectedItem();
+        if(OrderForWorker.signFactoryToOrder(client.connection, factory, order)) {
+            orderForWorkerList.remove(order);
+            workerOrdersTable.setItems(orderForWorkerList);
+            factoryList.clear();
+            workerFactoryTable.setItems(factoryList);
+        }
+    }
+
+    @FXML
+    private void showFactoriesButtonOnClick(ActionEvent e) {
+        OrderForWorker order = workerOrdersTable.getSelectionModel().getSelectedItem();
+        factoryList = Factory.showFactoriesForOrder(client.connection, order);
+        workerFactoryTable.setItems(factoryList);
+    }
 
     //FACTORY MANAGEMENT
     private void initFactoryManagementView() {
