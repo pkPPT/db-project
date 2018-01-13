@@ -1,0 +1,4 @@
+Backup bazy danych znajduje sie w katalogu "FULL DUMP":
+-dumpConcernDB - glowna baza danych projektu
+-dumpMysql - baza danych mysql
+-dumpMysqlUserTable - tylko tabela user z bazy mysql
