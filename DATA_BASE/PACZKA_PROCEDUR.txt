@@ -1,0 +1,166 @@
+Paczka procedur:
+
+// START ADD DEALER //
+
+CREATE PROCEDURE add_dealer(IN ID VARCHAR(100), IN Country VARCHAR(30),
+  IN City VARCHAR(50),
+  IN Address VARCHAR(100),
+  IN Phone_Number VARCHAR(20))
+  BEGIN
+    INSERT INTO dealer VALUES(ID, Country, City, Address, Phone_Number, 1);
+  END;
+
+// END ADD DEALER //
+
+
+// START DELETE DEALEAR //
+
+CREATE PROCEDURE delete_dealer(IN ID VARCHAR(100))
+  BEGIN
+    UPDATE dealer SET Is_Available = FALSE WHERE dealer.ID = ID;
+  END;
+
+// END DELETE DEALEAR //
+
+
+// START ADD CAR STORE //
+
+CREATE PROCEDURE add_car_store(
+  IN ID_Dealer VARCHAR(100),
+  IN Country VARCHAR(30),
+  IN City VARCHAR(50),
+  IN Address VARCHAR(100)
+)
+  BEGIN
+    INSERT INTO car_store VALUES('', ID_Dealer, Country, City, Address);
+  END;
+
+// END ADD CAR STORE //
+
+
+// START DELETE CAR STORE //
+
+CREATE PROCEDURE delete_car_store(
+  IN ID_Dealer VARCHAR(100)
+)
+  BEGIN
+    UPDATE car_store SET ID_Dealer = NULL WHERE car_store.ID_Dealer = ID;
+  END;
+
+// END DELETE CAR STORE //
+
+
+// START ADD FACTORY //
+
+CREATE PROCEDURE add_factory(
+  IN Country VARCHAR(30),
+  IN City VARCHAR(50),
+  IN Address VARCHAR(100),
+  IN Phone_Number VARCHAR(20),
+  IN Workers INT
+)
+  BEGIN
+    INSERT INTO factory VALUES('', Country, City, Address, Phone_Number, Workers, TRUE);
+  END;
+
+// END ADD FACTORY //
+
+
+// START DELETE FACTORY //
+
+CREATE PROCEDURE delete_factory(
+  IN ID INT
+)
+  BEGIN
+    UPDATE factory SET Is_Available = FALSE WHERE factory.ID = ID;
+  END;
+
+// END DELETE FACTORY //
+
+
+// START ADD TRANSACTION //
+
+CREATE PROCEDURE add_transaction(
+  IN ID_Car_store INT,
+  IN ID_Brand_Model INT,
+  IN Type ENUM('Leasing', 'Sale', 'Lend')
+)
+  BEGIN
+    INSERT INTO transaction VALUES(NOW(), ID_Car_store, ID_Brand_Model, Type);
+  END;
+
+// END ADD TRANSACTION //
+
+
+// START ADD MODEL //
+
+CREATE PROCEDURE add_model(
+  IN Brand VARCHAR(100),
+  IN Model VARCHAR(100)
+)
+  BEGIN
+    INSERT INTO brand_model VALUES('', Brand, Model, TRUE);
+  END;
+
+// END ADD MODEL //
+
+// START ADD ORDER //
+
+CREATE PROCEDURE add_order(
+  IN ID_Dealer VARCHAR(100),
+  IN ID_Brand_Model INT,
+  IN Amount INT
+)
+  BEGIN
+    INSERT INTO dealer_orders VALUES('', ID_Dealer, ID_Brand_Model, Amount);CREATE PROCEDURE set_production_accomplished(
+  IN ID INT
+)
+  BEGIN
+    UPDATE production_orders SET Accomplished = TRUE WHERE production_orders.ID = ID;
+  END;
+  END;
+
+// END ADD ORDER //
+
+
+// START ASSIGNE MODEL TO FACTORY //
+
+CREATE PROCEDURE assigne_model_to_factory(
+  IN ID_Brand_Model INT,
+  in ID_Factory INT
+)
+  BEGIN
+    INSERT INTO factory_model VALUES(ID_Factory,ID_Brand_Model);
+  END;
+
+// END ASSIGNE MODEL TO FACTORY //
+
+
+// START SET PRODUCTION ACCOMPLISHED //
+
+CREATE PROCEDURE set_production_accomplished(
+  IN ID INT
+)
+  BEGIN
+    UPDATE production_orders SET Accomplished = TRUE WHERE production_orders.ID = ID;
+  END;
+
+// END SET PRODUCTION ACCOMPLISHED //
+
+
+// START MANAGE ORDER //
+
+CREATE PROCEDURE manage_order(
+  IN ID_Dealer VARCHAR(100),
+  in ID_Factory INT,
+  IN ID_Brand_Model INT,
+  IN Amount INT
+)
+  BEGIN
+    INSERT INTO production_orders VALUES('', ID_Dealer, ID_Factory, ID_Brand_Model, Amount, FALSE);
+  END;
+
+
+// END MANAGE ORDER //
+
+
