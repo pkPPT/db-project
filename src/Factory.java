@@ -103,4 +103,27 @@ public class Factory {
         }
         return true;
     }
+
+    public static ObservableList<Factory> showFactoriesForOrder(Connection connection, OrderForWorker order) {
+        ObservableList<Factory> list = FXCollections.observableArrayList();
+        try {
+            PreparedStatement stmt = connection.prepareStatement("SELECT f.id, f.country, f.city, f.address, f.phone_number, f.workers " +
+                    "FROM Factory AS f " +
+                    "JOIN Factory_Model AS fm ON f.id = fm.id_factory " +
+                    "JOIN Dealer_Orders AS do ON fm.id_brand_model = do.id_brand_model " +
+                    "WHERE do.id = ?");
+
+            stmt.setInt(1, order.getOrderId());
+
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                Factory f = new Factory(rs.getInt("id"), rs.getString("country"), rs.getString("city"),
+                        rs.getString("address"), rs.getInt("phone_number"), rs.getInt("workers"));
+                list.add(f);
+            }
+        } catch(SQLException ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
 }

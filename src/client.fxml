@@ -15,7 +15,7 @@
    <children>
       <StackPane fx:id="loginView" prefHeight="150.0" prefWidth="200.0">
          <children>
-            <Label text="Nazwa" StackPane.alignment="TOP_CENTER">
+            <Label text="Company DataBase Manager" StackPane.alignment="TOP_CENTER">
                <font>
                   <Font size="36.0" />
                </font>
@@ -339,6 +339,39 @@
                   <Insets top="30.0" />
                </StackPane.margin>
             </Label>
+            <Button fx:id="signToFactoryButton" layoutX="275.0" layoutY="695.0" mnemonicParsing="false" onAction="#signToFactoryButtonOnClick" text="Sign to Factory" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets top="630.0" />
+               </StackPane.margin>
+            </Button>
+            <TableView fx:id="workerOrdersTable" prefHeight="200.0" prefWidth="200.0" StackPane.alignment="TOP_CENTER">
+              <columns>
+                <TableColumn fx:id="workerOrdersTableBrand" prefWidth="124.0" text="Brand" />
+                <TableColumn fx:id="workerOrdersTableModel" prefWidth="125.0" text="Model" />
+                  <TableColumn fx:id="workerOrdersTableAmount" prefWidth="70.0" text="Amount" />
+                  <TableColumn fx:id="workerOrdersTableCountry" prefWidth="84.0" text="Country" />
+                  <TableColumn fx:id="workerOrdersTableCity" prefWidth="96.0" text="City" />
+              </columns>
+               <StackPane.margin>
+                  <Insets bottom="450.0" left="50.0" right="50.0" top="100.0" />
+               </StackPane.margin>
+            </TableView>
+            <TableView fx:id="workerFactoryTable" prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TableColumn fx:id="workerFactoryTableCountry" prefWidth="86.0" text="Country" />
+                  <TableColumn fx:id="workerFactoryTableCity" prefWidth="93.0" text="City" />
+                  <TableColumn fx:id="workerFactoryTableAddress" prefWidth="202.0" text="Address" />
+                  <TableColumn fx:id="workerFactoryTableNumber" prefWidth="118.0" text="Phone Number" />
+              </columns>
+               <StackPane.margin>
+                  <Insets bottom="200.0" left="50.0" right="50.0" top="400.0" />
+               </StackPane.margin>
+            </TableView>
+            <Button fx:id="showFactoriesButton" layoutX="250.0" layoutY="640.0" mnemonicParsing="false" onAction="#showFactoriesButtonOnClick" text="Show Available Factories" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets top="360.0" />
+               </StackPane.margin>
+            </Button>
          </children>
       </StackPane>
       <StackPane fx:id="dealerManagementView" disable="true" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="200.0" visible="false">
@@ -454,7 +487,7 @@
       </StackPane>
       <StackPane fx:id="carStoreManagementView" disable="true" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="200.0" visible="false">
          <children>
-            <Button fx:id="addCarStoreButton" mnemonicParsing="false" onAction="#addCarStoreButtonOnClick" text="Add New Car" StackPane.alignment="TOP_CENTER">
+            <Button fx:id="addCarStoreButton" mnemonicParsing="false" onAction="#addCarStoreButtonOnClick" text="Add New Car Store" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
                   <Insets top="630.0" />
                </StackPane.margin>
@@ -472,7 +505,7 @@
                   <Insets top="30.0" />
                </StackPane.margin>
             </Label>
-            <Button fx:id="removeCarStoreButton" layoutX="163.0" layoutY="610.0" mnemonicParsing="false" onAction="#removeCarStoreButtonOnClick" text="Remove Car" StackPane.alignment="TOP_CENTER">
+            <Button fx:id="removeCarStoreButton" layoutX="163.0" layoutY="610.0" mnemonicParsing="false" onAction="#removeCarStoreButtonOnClick" text="Remove Car Store" StackPane.alignment="TOP_CENTER">
                <StackPane.margin>
                   <Insets top="470.0" />
                </StackPane.margin>
@@ -492,6 +525,16 @@
                   <Insets left="50.0" right="50.0" top="570.0" />
                </StackPane.margin>
             </TextField>
+            <TableView fx:id="carStoreTable" prefHeight="200.0" prefWidth="200.0" StackPane.alignment="TOP_CENTER">
+              <columns>
+                <TableColumn fx:id="carStoreTableCountry" prefWidth="150.0" text="Country" />
+                <TableColumn fx:id="carStoreTableCity" prefWidth="150.0" text="City" />
+                  <TableColumn fx:id="carStoreTableAddress" prefWidth="200.0" text="Address" />
+              </columns>
+               <StackPane.margin>
+                  <Insets bottom="350.0" left="50.0" right="50.0" top="100.0" />
+               </StackPane.margin>
+            </TableView>
          </children>
       </StackPane>
       <StackPane fx:id="dealerOrdersView" disable="true" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="200.0" visible="false">
@@ -539,6 +582,16 @@
                   <Insets left="320.0" right="50.0" top="530.0" />
                </StackPane.margin>
             </TextField>
+            <TableView fx:id="dealerOrdersTable" prefHeight="200.0" prefWidth="200.0" StackPane.alignment="TOP_CENTER">
+              <columns>
+                <TableColumn fx:id="dealerOrdersTableBrand" prefWidth="200.0" text="Brand" />
+                  <TableColumn fx:id="dealerOrdersTableModel" prefWidth="200.0" text="Model" />
+                <TableColumn fx:id="dealerOrdersTableAmount" prefWidth="100.0" text="Amount" />
+              </columns>
+               <StackPane.margin>
+                  <Insets bottom="320.0" left="50.0" right="50.0" top="100.0" />
+               </StackPane.margin>
+            </TableView>
          </children>
       </StackPane>
    </children>

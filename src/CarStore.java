@@ -1,3 +1,8 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.sql.*;
+
 public class CarStore {
     int id; //PRIMARY KEY
     String dealerId;
@@ -33,7 +38,48 @@ public class CarStore {
         return address;
     }
 
-    public static boolean addCarStore(String dealerId, String country, String city, String address) {
+    public static ObservableList<CarStore> getCarStoreList(Connection connection, String dealerId) {
+        ObservableList<CarStore> list = FXCollections.observableArrayList();
+        String query = "SELECT * FROM car_store WHERE car_store.id_dealer = '" +  dealerId + "'";
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while(rs.next()) {
+                CarStore cS = new CarStore(rs.getInt("id"), rs.getString("id_dealer"),
+                        rs.getString("country"), rs.getString("city"), rs.getString("address"));
+                list.add(cS);
+            }
+        } catch(SQLException ex) { ex.printStackTrace(); }
+        return list;
+    }
+
+    public static boolean addCarStore(Connection connection, String dealerId, String country, String city, String address) {
+        try {
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Car_Store(id_dealer, country, city, address) " +
+                    "VALUES( ?, ?, ?, ?)");
+            stmt.setString(1, dealerId);
+            stmt.setString(2, country);
+            stmt.setString(3, city);
+            stmt.setString(4, address);
+
+            stmt.executeUpdate();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean deleteCarStore(Connection connection, CarStore carStore) {
+        try {
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM Car_Store WHERE ID = ?");
+            stmt.setInt(1, carStore.getId());
+            stmt.executeUpdate();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
         return true;
     }
 }
