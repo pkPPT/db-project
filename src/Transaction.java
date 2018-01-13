@@ -26,14 +26,13 @@ public class Transaction {
             rs1.next();
             idBrandModel = rs1.getInt("id");
 
-            PreparedStatement stmt2 = connection.prepareStatement("INSERT INTO Transaction(date, id_car_store, id_brand_model, type) " +
-                    "VALUES( ?, ?, ?, ?)");
-            GregorianCalendar calendar = new GregorianCalendar();
-            java.util.Date dateNow = calendar.getTime();
-            stmt2.setDate(1, new Date(dateNow.getTime()));
-            stmt2.setInt(2, carStoreId);
-            stmt2.setInt(3, idBrandModel);
-            stmt2.setString(4, type);
+//            PreparedStatement stmt2 = connection.prepareStatement("INSERT INTO Transaction(date, id_car_store, id_brand_model, type) " +
+//                    "VALUES( ?, ?, ?, ?)");
+            PreparedStatement stmt2 = connection.prepareStatement("CALL add_transaction(?, ?, ?)");
+
+            stmt2.setInt(1, carStoreId);
+            stmt2.setInt(2, idBrandModel);
+            stmt2.setString(3, type);
 
             stmt2.executeUpdate();
         } catch(SQLException ex) {

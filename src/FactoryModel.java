@@ -125,18 +125,13 @@ public class FactoryModel {
         return list;
     }
 
-    public static ObservableList<BrandModel> getModels(Factory factory, ObservableList<BrandModel> brandModels) {
-        ObservableList<BrandModel> models = FXCollections.observableArrayList();
-
-        return models;
-    }
-
     public static boolean addFactoryModel(Connection connection, int factoryId, int modelId) {
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Factory_Model(id_factory, id_brand_model) " +
-                    "VALUES( ?, ?)");
-            stmt.setInt(1, factoryId);
-            stmt.setInt(2, modelId);
+//            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Factory_Model(id_factory, id_brand_model) " +
+//                    "VALUES( ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("CALL assigne_model_to_factory(?, ?)");
+            stmt.setInt(2, factoryId);
+            stmt.setInt(1, modelId);
 
             stmt.executeUpdate();
         } catch(SQLException ex) {
