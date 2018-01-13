@@ -1,8 +1,9 @@
--- MySQL dump 10.16  Distrib 10.2.9-MariaDB, for Win64 (AMD64)
+-- MySQL dump 10.16  Distrib 10.2.12-MariaDB, for Win64 (AMD64)
 --
 -- Host: 127.0.0.1    Database: concerndb
 -- ------------------------------------------------------
--- Server version	10.2.9-MariaDB
+-- Server version	10.2.12-MariaDB
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -14,8 +15,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-CREATE DATABASE IF NOT EXISTS concerndb;
-USE concerndb;
 --
 -- Table structure for table `brand_model`
 --
@@ -29,7 +28,7 @@ CREATE TABLE `brand_model` (
   `Model` varchar(50) NOT NULL,
   `In_Production` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +37,7 @@ CREATE TABLE `brand_model` (
 
 LOCK TABLES `brand_model` WRITE;
 /*!40000 ALTER TABLE `brand_model` DISABLE KEYS */;
-INSERT INTO `brand_model` VALUES (1,'Volkswagen','Golf I',0),(2,'Volkswagen','Beetle',1);
+INSERT INTO `brand_model` VALUES (1,'Volkswagen','Golf I',1),(2,'Volkswagen','Beetle',1),(3,'Volkswagen','Golf III',1),(4,'Volkswagen','Touran',1),(5,'Volkswagen','Caddy',1),(6,'Volkswagen','Passat',1),(7,'Volkswagen','Polo',1),(8,'Volkswagen','Jetta',1),(9,'Volkswagen','Bora',1);
 /*!40000 ALTER TABLE `brand_model` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,7 +57,7 @@ CREATE TABLE `car_store` (
   PRIMARY KEY (`ID`),
   KEY `ID_Dealer` (`ID_Dealer`),
   CONSTRAINT `car_store_ibfk_1` FOREIGN KEY (`ID_Dealer`) REFERENCES `dealer` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,6 +66,7 @@ CREATE TABLE `car_store` (
 
 LOCK TABLES `car_store` WRITE;
 /*!40000 ALTER TABLE `car_store` DISABLE KEYS */;
+INSERT INTO `car_store` VALUES (1,'dealertest','Poland','Wroclaw','Legnicka 1'),(3,'Auto-Centrum','Poland','Lubin','ul. Mila 58'),(4,'Inter Auto','Poland','Krakow','ul. Biala 13'),(5,'Volkswagen Centrum','Poland','Poznan','ul. Nizinna 20');
 /*!40000 ALTER TABLE `car_store` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +94,7 @@ CREATE TABLE `dealer` (
 
 LOCK TABLES `dealer` WRITE;
 /*!40000 ALTER TABLE `dealer` DISABLE KEYS */;
-INSERT INTO `dealer` VALUES ('Krotoski-Cichy','Poland','Warszawa','ul. Radzymińska 78',543328190,1);
+INSERT INTO `dealer` VALUES ('a','a','a','a',123456789,0),('Auto-Centrum','Poland','Lubin','ul. Mila 56',603587946,1),('dealertest','Poland','Wroclaw','ul. Legnicka 1',0,1),('Inter Auto','Poland','Krakow','ul. Jasnogorska 60',123781717,1),('Krotoski-Cichy','Poland','Warszawa','ul. Radzymińska 78',543328190,1),('Volkswagen Centrum','Poland','Poznan','ul. Nizinna 19',618302004,1);
 /*!40000 ALTER TABLE `dealer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,7 +115,7 @@ CREATE TABLE `dealer_orders` (
   KEY `ID_Brand_Model` (`ID_Brand_Model`),
   CONSTRAINT `dealer_orders_ibfk_1` FOREIGN KEY (`ID_Dealer`) REFERENCES `dealer` (`ID`),
   CONSTRAINT `dealer_orders_ibfk_2` FOREIGN KEY (`ID_Brand_Model`) REFERENCES `brand_model` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,6 +124,7 @@ CREATE TABLE `dealer_orders` (
 
 LOCK TABLES `dealer_orders` WRITE;
 /*!40000 ALTER TABLE `dealer_orders` DISABLE KEYS */;
+INSERT INTO `dealer_orders` VALUES (4,'Auto-Centrum',3,5),(6,'Auto-Centrum',8,5),(8,'Auto-Centrum',1,15),(9,'Inter Auto',1,15),(11,'Inter Auto',3,5),(16,'Volkswagen Centrum',9,5);
 /*!40000 ALTER TABLE `dealer_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -163,7 +164,7 @@ CREATE TABLE `factory` (
   `Workers` int(11) NOT NULL DEFAULT 0,
   `Is_Available` tinyint(4) NOT NULL DEFAULT 1,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -172,7 +173,7 @@ CREATE TABLE `factory` (
 
 LOCK TABLES `factory` WRITE;
 /*!40000 ALTER TABLE `factory` DISABLE KEYS */;
-INSERT INTO `factory` VALUES (1,'Poland','Bielany Wrocławskie','ul. Ryszarda Chomicza',500121001,4000,1);
+INSERT INTO `factory` VALUES (1,'Poland','Bielany Wrocławskie','ul. Ryszarda Chomicza',500121001,4000,1),(2,'Poland','Wroclaw','Legnicka 1',100000000,0,1),(3,'Poland','Warszawa','ul. Fabryczna 2',687498233,0,1),(4,'Poland','Krakow','ul. Biala 13',533167899,0,1),(5,'a','a','a',0,0,0);
 /*!40000 ALTER TABLE `factory` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -240,7 +241,7 @@ CREATE TABLE `factory_model` (
 
 LOCK TABLES `factory_model` WRITE;
 /*!40000 ALTER TABLE `factory_model` DISABLE KEYS */;
-INSERT INTO `factory_model` VALUES (1,2);
+INSERT INTO `factory_model` VALUES (1,1),(1,2),(1,5),(1,7),(1,9),(2,3),(2,4),(2,6),(2,9),(3,2),(3,5),(3,8),(4,1),(4,2),(4,3),(4,5),(4,8);
 /*!40000 ALTER TABLE `factory_model` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -274,7 +275,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 /*!50032 DROP TRIGGER IF EXISTS delete_factory_model */;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER delete_factory_model AFTER DELETE ON Factory_Model
@@ -340,6 +341,7 @@ CREATE TABLE `orders_log` (
 
 LOCK TABLES `orders_log` WRITE;
 /*!40000 ALTER TABLE `orders_log` DISABLE KEYS */;
+INSERT INTO `orders_log` VALUES ('2018-01-13 21:30:43','dealertest',2,100),('2018-01-13 22:39:51','dealertest',1,100),('2018-01-13 22:40:22','dealertest',1,10),('2018-01-13 23:36:13','Auto-Centrum',5,5),('2018-01-13 23:36:18','Auto-Centrum',9,50),('2018-01-13 23:36:20','Inter Auto',4,5),('2018-01-13 23:36:23','Inter Auto',6,13),('2018-01-13 23:36:26','Inter Auto',2,1),('2018-01-13 23:36:28','Inter Auto',5,7),('2018-01-13 23:36:32','Volkswagen Centrum',6,7),('2018-01-13 23:36:36','Volkswagen Centrum',1,13),('2018-01-13 23:36:39','Volkswagen Centrum',7,14);
 /*!40000 ALTER TABLE `orders_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -393,7 +395,7 @@ CREATE TABLE `production_orders` (
   CONSTRAINT `production_orders_ibfk_1` FOREIGN KEY (`ID_Dealer`) REFERENCES `dealer` (`ID`),
   CONSTRAINT `production_orders_ibfk_2` FOREIGN KEY (`ID_Factory`) REFERENCES `factory` (`ID`),
   CONSTRAINT `production_orders_ibfk_3` FOREIGN KEY (`ID_Brand_Model`) REFERENCES `brand_model` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -402,6 +404,7 @@ CREATE TABLE `production_orders` (
 
 LOCK TABLES `production_orders` WRITE;
 /*!40000 ALTER TABLE `production_orders` DISABLE KEYS */;
+INSERT INTO `production_orders` VALUES (1,'dealertest',1,2,100,0),(2,'dealertest',1,1,100,0),(3,'dealertest',1,1,10,0),(4,'Auto-Centrum',1,5,5,0),(5,'Auto-Centrum',1,9,50,0),(6,'Inter Auto',2,4,5,0),(7,'Inter Auto',2,6,13,0),(8,'Inter Auto',3,2,1,0),(9,'Inter Auto',4,5,7,0),(10,'Volkswagen Centrum',2,6,7,0),(11,'Volkswagen Centrum',4,1,13,0),(12,'Volkswagen Centrum',1,7,14,0);
 /*!40000 ALTER TABLE `production_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -493,8 +496,309 @@ CREATE TABLE `transaction` (
 
 LOCK TABLES `transaction` WRITE;
 /*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
+INSERT INTO `transaction` VALUES ('1901-02-01 00:00:00',1,1,'sale'),('2018-01-13 00:00:00',1,1,'leasing'),('2018-01-13 22:40:55',1,2,'sale'),('2018-01-13 22:41:01',1,5,'sale'),('2018-01-13 22:41:04',1,7,'sale'),('2018-01-13 22:41:06',1,7,'leasing'),('2018-01-13 22:41:09',1,9,'leasing'),('2018-01-13 22:41:12',1,2,'leasing'),('2018-01-13 22:41:13',1,2,'leasing'),('2018-01-13 22:41:18',1,4,'leasing'),('2018-01-13 22:41:20',1,3,'leasing'),('2018-01-13 23:37:40',1,1,'leasing'),('2018-01-13 23:37:44',1,1,'leasing'),('2018-01-13 23:37:45',1,1,'leasing'),('2018-01-13 23:37:49',1,1,'leasing'),('2018-01-13 23:37:51',1,1,'sale'),('2018-01-13 23:37:53',1,5,'sale'),('2018-01-13 23:37:54',1,5,'sale'),('2018-01-13 23:37:55',1,5,'sale'),('2018-01-13 23:42:10',3,1,'sale'),('2018-01-13 23:42:13',3,5,'sale'),('2018-01-13 23:42:14',3,8,'sale'),('2018-01-13 23:42:16',3,6,'sale'),('2018-01-13 23:42:18',3,9,'sale'),('2018-01-13 23:42:20',3,5,'sale'),('2018-01-13 23:42:22',3,7,'sale'),('2018-01-13 23:42:37',3,3,'sale'),('2018-01-13 23:42:39',3,6,'sale'),('2018-01-13 23:42:41',3,4,'sale'),('2018-01-13 23:42:43',3,8,'sale'),('2018-01-13 23:42:44',3,9,'sale'),('2018-01-13 23:42:46',3,5,'sale'),('2018-01-13 23:42:49',3,7,'leasing'),('2018-01-13 23:42:50',3,3,'leasing'),('2018-01-13 23:42:52',3,3,'leasing'),('2018-01-13 23:42:54',3,3,'leasing'),('2018-01-13 23:42:55',3,3,'leasing'),('2018-01-13 23:42:56',3,3,'leasing'),('2018-01-13 23:42:57',3,3,'leasing'),('2018-01-13 23:42:59',3,3,'leasing'),('2018-01-13 23:43:18',4,1,'leasing'),('2018-01-13 23:43:20',4,1,'leasing'),('2018-01-13 23:43:22',4,4,'leasing'),('2018-01-13 23:43:24',4,7,'leasing'),('2018-01-13 23:43:25',4,7,'leasing'),('2018-01-13 23:43:27',4,5,'leasing'),('2018-01-13 23:43:28',4,9,'leasing'),('2018-01-13 23:43:31',4,8,'leasing'),('2018-01-13 23:43:32',4,4,'leasing'),('2018-01-13 23:43:34',4,2,'leasing'),('2018-01-13 23:43:35',4,2,'leasing'),('2018-01-13 23:43:37',4,2,'leasing');
 /*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `login` varchar(100) NOT NULL,
+  `is_company` tinyint(4) DEFAULT 0,
+  `is_worker` tinyint(4) DEFAULT 0,
+  `dealer_id` varchar(100) DEFAULT NULL,
+  `car_store_id` int(11) DEFAULT NULL,
+  `factory_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`login`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES ('carstore1',0,0,NULL,3,NULL),('carstore2',0,0,NULL,3,NULL),('carstore3',0,0,NULL,4,NULL),('carstoretest',0,0,NULL,1,NULL),('companytest',1,0,NULL,NULL,NULL),('dealer1',0,0,'Auto-Centrum',NULL,NULL),('dealer2',0,0,'Inter Auto',NULL,NULL),('dealer3',0,0,'Volkswagen Centrum',NULL,NULL),('dealertest',0,0,'dealertest',NULL,NULL),('factory1',0,0,NULL,NULL,1),('factory3',0,0,NULL,NULL,3),('factory4',0,0,NULL,NULL,4),('factorytest',0,0,NULL,NULL,2),('Krotoski-Cichy',0,0,'Krotoski-Cichy',NULL,NULL),('root',1,1,'%',1,1),('worker',0,1,NULL,NULL,NULL),('workertest',0,1,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'concerndb'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `add_car_store` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_car_store`(
+  IN ID_Dealer VARCHAR(100),
+  IN Country VARCHAR(30),
+  IN City VARCHAR(50),
+  IN Address VARCHAR(100)
+)
+BEGIN
+    INSERT INTO car_store(ID_Dealer, Country, City, Address) VALUES(ID_Dealer, Country, City, Address);
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `add_dealer` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_dealer`(IN ID VARCHAR(100), IN Country VARCHAR(30),
+  IN City VARCHAR(50),
+  IN Address VARCHAR(100),
+  IN Phone_Number VARCHAR(20))
+BEGIN
+    INSERT INTO dealer VALUES(ID, Country, City, Address, Phone_Number, 1);
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `add_factory` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_factory`(
+  IN Country VARCHAR(30),
+  IN City VARCHAR(50),
+  IN Address VARCHAR(100),
+  IN Phone_Number VARCHAR(20),
+  IN Workers INT
+)
+BEGIN
+    INSERT INTO factory(Country, City, Address, Phone_Number, Workers, Is_Available) VALUES(Country, City, Address, Phone_Number, Workers, TRUE);
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `add_model` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_model`(
+  IN Brand VARCHAR(100),
+  IN Model VARCHAR(100)
+)
+BEGIN
+    INSERT INTO brand_model(Brand, Model, In_Production) VALUES(Brand, Model, FALSE);
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `add_order` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_order`(
+  IN ID_Dealer VARCHAR(100),
+  IN ID_Brand_Model INT,
+  IN Amount INT
+)
+BEGIN
+    INSERT INTO dealer_orders(ID_Dealer, ID_Brand_Model, Amount) VALUES(ID_Dealer, ID_Brand_Model, Amount);
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `add_transaction` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_transaction`(
+  IN ID_Car_store INT,
+  IN ID_Brand_Model INT,
+  IN Type ENUM('Leasing', 'Sale', 'Lend')
+)
+BEGIN
+    INSERT INTO transaction VALUES(NOW(), ID_Car_store, ID_Brand_Model, Type);
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `assigne_model_to_factory` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `assigne_model_to_factory`(
+  IN ID_Brand_Model INT,
+  in ID_Factory INT
+)
+BEGIN
+    INSERT INTO factory_model VALUES(ID_Factory,ID_Brand_Model);
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `delete_car_store` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_car_store`(
+  IN ID_Car_Store INT
+)
+BEGIN
+    UPDATE car_store SET ID_Dealer = NULL WHERE car_store.ID = ID_Car_Store;
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `delete_dealer` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_dealer`(IN ID VARCHAR(100))
+BEGIN
+    UPDATE dealer SET Is_Available = FALSE WHERE dealer.ID = ID;
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `delete_factory` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_factory`(
+  IN ID INT
+)
+BEGIN
+    UPDATE factory SET Is_Available = FALSE WHERE factory.ID = ID;
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `manage_order` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `manage_order`(
+  IN ID_Dealer VARCHAR(100),
+  in ID_Factory INT,
+  IN ID_Brand_Model INT,
+  IN Amount INT
+)
+BEGIN
+    INSERT INTO production_orders(ID_Dealer, ID_Factory, ID_Brand_Model, Amount, Accomplished)
+    VALUES(ID_Dealer, ID_Factory, ID_Brand_Model, Amount, FALSE);
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `set_production_accomplished` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `set_production_accomplished`(
+  IN ID_Order INT
+)
+BEGIN
+    UPDATE production_orders SET Accomplished = TRUE WHERE production_orders.ID = ID_Order;
+  END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -505,244 +809,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-13  3:37:55
-
-DROP TABLE IF EXISTS users;
-CREATE TABLE users(
-  login VARCHAR(100) NOT NULL,
-  is_company TINYINT DEFAULT FALSE,
-  is_worker TINYINT DEFAULT FALSE,
-  dealer_id VARCHAR(100) DEFAULT NULL,
-  car_store_id INT DEFAULT NULL,
-  factory_id INT DEFAULT NULL,
-  PRIMARY KEY (login)
-);
-# -----------------------------------------------------------------------------------------------
-# SELECT * FROM dealer;
-# INSERT INTO users(login, dealer_id) VALUES('Krotoski-Cichy', 'Krotoski-Cichy');
-# INSERT INTO users(login, is_company, is_worker, dealer_id, car_store_id, factory_id)
-# VALUES('root', TRUE, TRUE, '%', 1, 1);
-#
-#
-# SELECT * FROM users JOIN car_store ON users.car_store_id=car_store.id;
-# SELECT * FROM car_store;
-#
-# SELECT * FROM factory;
-# SELECT * FROM users;
-
-
-
-
-
-
-
-
-CREATE USER 'Krotoski-Cichy'@'%';
-SET PASSWORD FOR 'Krotoski-Cichy'@'%' = PASSWORD('1234');
-
-GRANT SELECT ON concerndb.dealer TO 'Krotoski-Cichy'@'%';
-GRANT INSERT, SELECT, DELETE ON concerndb.car_store TO 'Krotoski-Cichy'@'%';
-GRANT INSERT, SELECT ON concerndb.dealer_orders TO 'Krotoski-Cichy'@'%';
-GRANT SELECT ON concerndb.brand_model TO 'Krotoski-Cichy'@'%';
-GRANT SELECT ON concerndb.users TO 'Krotoski-Cichy'@'%';
-GRANT SELECT ON concerndb.orders_log TO 'Krotoski-Cichy'@'%';
-GRANT SELECT ON concerndb.transaction TO 'Krotoski-Cichy'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.add_car_store TO 'Krotoski-Cichy'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.delete_car_store TO 'Krotoski-Cichy'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.add_order TO 'Krotoski-Cichy'@'%';
-
-FLUSH PRIVILEGES;
-
-# Przykladowy dealer user
-CREATE USER 'dealer4'@'%';
-SET PASSWORD FOR 'dealer4'@'%' = PASSWORD('dealer4');
-GRANT SELECT ON concerndb.dealer TO 'dealer4'@'%';
-GRANT INSERT, SELECT, DELETE ON concerndb.car_store TO 'dealer4'@'%';
-GRANT INSERT, SELECT ON concerndb.dealer_orders TO 'dealer4'@'%';
-GRANT SELECT ON concerndb.brand_model TO 'dealer4'@'%';
-GRANT SELECT ON concerndb.users TO 'dealer4'@'%';
-GRANT SELECT ON concerndb.orders_log TO 'dealer4'@'%';
-GRANT SELECT ON concerndb.transaction TO 'dealer4'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.add_car_store TO 'dealer4'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.delete_car_store TO 'dealer4'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.add_order TO 'dealer4'@'%';
-
-
-INSERT INTO dealer(ID, Country, City, Address, Phone_Number, Is_Available) VALUES('dealertest', 'Poland', 'Wroclaw', 'ul. Legnicka 1', 000000000, TRUE);
-INSERT INTO users(login, dealer_id) VALUES('dealertest', 'dealertest');
-
-SELECT * from users;
-
-
-# Przykladowy factory user
-CREATE USER 'factory4'@'%';
-SET PASSWORD FOR 'factory4'@'%' = PASSWORD('factory4');
-GRANT SELECT ON concerndb.factory_model TO 'factory4'@'%';
-GRANT SELECT, DELETE, UPDATE ON concerndb.production_orders TO 'factory4'@'%';
-GRANT SELECT ON concerndb.brand_model TO 'factory4'@'%';
-GRANT SELECT ON concerndb.users TO 'factory4'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.set_production_accomplished TO 'factory4'@'%';
-FLUSH PRIVILEGES ;
-
-INSERT INTO factory(Country, City, Address, Phone_Number, Workers, Is_Available) VALUES('Poland', 'Wroclaw', 'Legnicka 1', 100000000, 0, TRUE);
-INSERT INTO users(login, factory_id) VALUES('factorytest', 2);
-
-# Przykladowy carstore user
-CREATE USER 'carstore1'@'%';
-SET PASSWORD FOR 'carstore1'@'%' = PASSWORD('carstore1');
-GRANT INSERT, SELECT ON concerndb.transaction TO 'carstore1'@'%';
-GRANT SELECT ON concerndb.brand_model TO 'carstore1'@'%';
-GRANT SELECT ON concerndb.users TO 'carstore1'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.add_transaction TO 'carstore1'@'%';
-FLUSH PRIVILEGES ;
-
-INSERT INTO car_store(ID_Dealer, Country, City, Address) VALUES('dealertest', 'Poland', 'Wroclaw', 'Legnicka 1');
-INSERT INTO users(login, car_store_id) VALUES('carstoretest', 1);
-
-# Przykladowy worker user
-CREATE USER 'workertest'@'%';
-SET PASSWORD FOR 'workertest'@'%' = PASSWORD('test');
-GRANT INSERT, SELECT, UPDATE ON concerndb.dealer_orders TO 'workertest'@'%';
-GRANT SELECT ON concerndb.factory TO 'workertest'@'%';
-GRANT SELECT ON concerndb.dealer TO 'workertest'@'%';
-GRANT SELECT ON concerndb.users TO 'workertest'@'%';
-GRANT SELECT ON concerndb.brand_model TO 'workertest'@'%';
-GRANT SELECT ON concerndb.factory_model TO 'workertest'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.manage_order TO 'workertest'@'%';
-FLUSH PRIVILEGES;
-
-INSERT INTO users(login, is_worker) VALUES('worker', TRUE);
-
-# Przykladowy company user
-CREATE USER 'companytest'@'%';
-SET PASSWORD FOR 'companytest'@'%' = PASSWORD('test');
-GRANT INSERT, SELECT, UPDATE, DELETE ON concerndb.dealer TO 'companytest'@'%';
-GRANT INSERT, SELECT, UPDATE, DELETE ON concerndb.factory TO 'companytest'@'%';
-GRANT INSERT, SELECT, UPDATE, DELETE ON concerndb.factory_model TO 'companytest'@'%';
-GRANT SELECT ON concerndb.car_store TO 'companytest'@'%';
-GRANT SELECT ON concerndb.dealer_orders TO 'companytest'@'%';
-GRANT INSERT, SELECT, UPDATE, DELETE ON concerndb.brand_model TO 'companytest'@'%';
-GRANT SELECT ON concerndb.users TO 'companytest'@'%';
-GRANT SELECT ON concerndb.production_log TO 'companytest'@'%';
-GRANT SELECT ON concerndb.production_orders TO 'companytest'@'%';
-GRANT SELECT ON concerndb.transaction TO 'companytest'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.add_factory TO 'companytest'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.delete_factory TO 'companytest'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.assigne_model_to_factory TO 'companytest'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.add_dealer TO 'companytest'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.delete_dealer TO 'companytest'@'%';
-GRANT EXECUTE ON PROCEDURE concerndb.add_model TO 'companytest'@'%';
-FLUSH PRIVILEGES ;
-
-INSERT INTO users(login, is_company) VALUES('companytest', TRUE);
-SELECT * FROM factory;
-
-
-# ----------------------------------------------------------------------------
-# Procedury
-#
-#
-
-CREATE PROCEDURE add_dealer(IN ID VARCHAR(100), IN Country VARCHAR(30),
-  IN City VARCHAR(50),
-  IN Address VARCHAR(100),
-  IN Phone_Number VARCHAR(20))
-  BEGIN
-    INSERT INTO dealer VALUES(ID, Country, City, Address, Phone_Number, 1);
-  END;
-
-CREATE PROCEDURE delete_dealer(IN ID VARCHAR(100))
-  BEGIN
-    UPDATE dealer SET Is_Available = FALSE WHERE dealer.ID = ID;
-  END;
-
-CREATE PROCEDURE add_car_store(
-  IN ID_Dealer VARCHAR(100),
-  IN Country VARCHAR(30),
-  IN City VARCHAR(50),
-  IN Address VARCHAR(100)
-)
-  BEGIN
-    INSERT INTO car_store(ID_Dealer, Country, City, Address) VALUES(ID_Dealer, Country, City, Address);
-  END;
-
-# DROP PROCEDURE delete_car_store;
-CREATE PROCEDURE delete_car_store(
-  IN ID_Car_Store INT
-)
-  BEGIN
-    UPDATE car_store SET ID_Dealer = NULL WHERE car_store.ID = ID_Car_Store;
-  END;
-
-CREATE PROCEDURE add_factory(
-  IN Country VARCHAR(30),
-  IN City VARCHAR(50),
-  IN Address VARCHAR(100),
-  IN Phone_Number VARCHAR(20),
-  IN Workers INT
-)
-  BEGIN
-    INSERT INTO factory(Country, City, Address, Phone_Number, Workers, Is_Available) VALUES(Country, City, Address, Phone_Number, Workers, TRUE);
-  END;
-
-CREATE PROCEDURE delete_factory(
-  IN ID INT
-)
-  BEGIN
-    UPDATE factory SET Is_Available = FALSE WHERE factory.ID = ID;
-  END;
-
-CREATE PROCEDURE add_transaction(
-  IN ID_Car_store INT,
-  IN ID_Brand_Model INT,
-  IN Type ENUM('Leasing', 'Sale', 'Lend')
-)
-  BEGIN
-    INSERT INTO transaction VALUES(NOW(), ID_Car_store, ID_Brand_Model, Type);
-  END;
-
-# DROP PROCEDURE add_model;
-CREATE PROCEDURE add_model(
-  IN Brand VARCHAR(100),
-  IN Model VARCHAR(100)
-)
-  BEGIN
-    INSERT INTO brand_model(Brand, Model, In_Production) VALUES(Brand, Model, FALSE);
-  END;
-
-CREATE PROCEDURE add_order(
-  IN ID_Dealer VARCHAR(100),
-  IN ID_Brand_Model INT,
-  IN Amount INT
-)
-  BEGIN
-    INSERT INTO dealer_orders(ID_Dealer, ID_Brand_Model, Amount) VALUES(ID_Dealer, ID_Brand_Model, Amount);
-  END;
-
-# DROP PROCEDURE set_production_accomplished;
-CREATE PROCEDURE set_production_accomplished(
-  IN ID_Order INT
-)
-  BEGIN
-    UPDATE production_orders SET Accomplished = TRUE WHERE production_orders.ID = ID_Order;
-  END;
-
-CREATE PROCEDURE assigne_model_to_factory(
-  IN ID_Brand_Model INT,
-  in ID_Factory INT
-)
-  BEGIN
-    INSERT INTO factory_model VALUES(ID_Factory,ID_Brand_Model);
-  END;
-
-# DROP PROCEDURE manage_order;
-CREATE PROCEDURE manage_order(
-  IN ID_Dealer VARCHAR(100),
-  in ID_Factory INT,
-  IN ID_Brand_Model INT,
-  IN Amount INT
-)
-  BEGIN
-    INSERT INTO production_orders(ID_Dealer, ID_Factory, ID_Brand_Model, Amount, Accomplished)
-    VALUES(ID_Dealer, ID_Factory, ID_Brand_Model, Amount, FALSE);
-  END;
+-- Dump completed on 2018-01-14  0:41:00
