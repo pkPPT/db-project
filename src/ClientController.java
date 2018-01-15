@@ -467,8 +467,8 @@ public class ClientController {
         workerOrdersTableBrand.setCellValueFactory(new PropertyValueFactory<>("brand"));
         workerOrdersTableModel.setCellValueFactory(new PropertyValueFactory<>("model"));
         workerOrdersTableAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        workerOrdersTableCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
-        workerOrdersTableCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        workerOrdersTableCountry.setCellValueFactory(new PropertyValueFactory<>("dealerCountry"));
+        workerOrdersTableCity.setCellValueFactory(new PropertyValueFactory<>("dealerCity"));
         workerOrdersTable.setItems(orderForWorkerList);
 
         factoryList.clear();
